@@ -385,14 +385,12 @@
     if (diver.isOutOfSub) {
       playAudio("diveTune", true);
     } else {
-      console.log("spiting you");
       playAudio("subTune", false);
     }
 
     chests.forEach((chest, idx) => {
       chest.update();
       if (diver.isOutOfSub && circlesCollide(diver.cx, diver.cy, diver.h / 2, chest.x, chest.y, chest.r)) {
-        console.log("got it!!");
         increasePoints(chest.loot);
         chests.splice(idx, 1);
       }
