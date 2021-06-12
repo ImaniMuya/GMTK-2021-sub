@@ -205,19 +205,23 @@
   }
 
   function playAudio(track, startOver) {
-    if (audioOn && playingAudio != track) {
-      if (playingAudio) {pauseAudio(playingAudio)}
-      var audio = document.getElementById(track);
-      if (startOver) {audio.currentTime = 0;}
-      audio.play();
-      playingAudio = track
+    if (!paused){
+      console.log("playing again")
+      if (audioOn && playingAudio != track) {
+        if (playingAudio) {pauseAudio(playingAudio)}
+        var audio = document.getElementById(track);
+        if (startOver) {audio.currentTime = 0;}
+        audio.play();
+        playingAudio = track
+      }
     }
   }
 
   function pauseAudio(track) {
       console.log("inside pause:", track)
       var audio = document.getElementById(track);
-      audio.pause(track);
+      console.log("html element:", audio)
+      audio.pause();
       playingAudio = ""
       pausedAudio = track
   }
@@ -324,54 +328,56 @@
   }
 
   function update() {
-    if (!paused) {
-      submarine.update(keys);
-      diver.update(keys);
-      camera.update();
-      particles.update();
-      countDownSeconds();
-      reduceHealth();
-      if (diver.isOutOfSub){
-        playAudio("diveTune", true)
-      }else{
-        playAudio("subTune", false)
-      }
-
-      chests.forEach((chest, idx) => {
-        chest.update();
-        if (diver.isOutOfSub && circlesCollide(diver.cx, diver.cy, diver.h / 2, chest.x, chest.y, chest.r)) {
-          console.log("got it!!");
-          increasePoints(chest.loot);
-          chests.splice(idx, 1);
-        }
-      });
-
-      //placeholder for colliding and reducing health
-      if (keys["g"]) {
-        reduceHealth();
-      }
-      //placeholder for collecting treasure
-      if (keys["c"]) {
-        increasePoints();
-      }
-      // end game
-      if (keys["Escape"] || dead || submarine.y <= 0) {
-        done = true;
-        goToMenu();
-      }
-      //trigger switch prompt
-      if (keys["q"] && submarine.isGoingDown) {
-        switchDirectionsPrompt();
-        keys["q"] = false;
-      }
+    if (paused) return;
+    submarine.update(keys);
+    if (paused) return;
+    diver.update(keys);
+    camera.update();
+    particles.update();
+    countDownSeconds();
+    reduceHealth();
+    if (diver.isOutOfSub){
+      playAudio("diveTune", true)
+    }else{
+      console.log("spiting you")
+      playAudio("subTune", false)
     }
+
+    chests.forEach((chest, idx) => {
+      chest.update();
+      if (diver.isOutOfSub && circlesCollide(diver.cx, diver.cy, diver.h / 2, chest.x, chest.y, chest.r)) {
+        console.log("got it!!");
+        increasePoints(chest.loot);
+        chests.splice(idx, 1);
+      }
+    });
+
+    //placeholder for colliding and reducing health
+    if (keys["g"]) {
+      reduceHealth();
+    }
+    //placeholder for collecting treasure
+    if (keys["c"]) {
+      increasePoints();
+    }
+    // end game
+    if (keys["Escape"] || dead || submarine.y <= 0) {
+      done = true;
+      goToMenu();
+    }
+    //trigger switch prompt
+    if (keys["q"] && submarine.isGoingDown) {
+      switchDirectionsPrompt();
+      keys["q"] = false;
+    }
+    
   }
 
   function switchDirectionsPrompt() {
+    paused = true;
     console.log("hit the bottom:", playingAudio)
     pauseAudio(playingAudio);
     goingUp.classList.remove("hidden");
-    paused = true;
   }
   function goUp() {
     submarine.isGoingDown = false;
