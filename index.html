@@ -169,6 +169,7 @@
   var pausedAudio;
   var audioOn = true;
   var track = "menuTune";
+  var startOver = true;
   var difficultyLevel;
   const TILES = {
     "255,174,201,255": null,
@@ -204,7 +205,7 @@
     menu.classList.add("hidden");
     settingsScreen.classList.add("hidden");
     canvas.classList.add("hidden");
-    playAudio("menuTune");
+    playAudio("menuTune", true);
     // tally
     treasureCount.innerText = points;
     diveTime.innerText = 60 - Math.floor(subTimeRemaining);
@@ -232,7 +233,7 @@
     camera.x = 0;
     camera.y = 0;
     chests = getChests(lvl);
-    playAudio("subTune");
+    playAudio("subTune", true);
     paused = false;
     tick();
   }
@@ -242,24 +243,26 @@
     difficultyLevel = chosenDifficultyLevel.options[chosenDifficultyLevel.selectedIndex].value;
   }
 
-  function playAudio(track) {
-    if (audioOn && playingAudio != track) {
-      if (playingAudio) {
-        pauseAudio(playingAudio);
+  function playAudio(track, startOver) {
+    if (!paused){
+      console.log("playing again")
+      if (audioOn && playingAudio != track) {
+        if (playingAudio) {pauseAudio(playingAudio)}
+        var audio = document.getElementById(track);
+        if (startOver) {audio.currentTime = 0;}
+        audio.play();
+        playingAudio = track
       }
-      var audio = document.getElementById(track);
-      audio.currentTime = 0;
-      audio.play();
-      playingAudio = track;
     }
-    console.log("current audio:", playingAudio);
   }
 
   function pauseAudio(track) {
-    var audio = document.getElementById(track);
-    audio.pause(track);
-    playingAudio = "";
-    pausedAudio = track;
+      console.log("inside pause:", track)
+      var audio = document.getElementById(track);
+      console.log("html element:", audio)
+      audio.pause();
+      playingAudio = ""
+      pausedAudio = track
   }
 
   function toggleAudio() {
@@ -273,7 +276,7 @@
       audioOnBtn.value = "On";
       audioOnBtn.innerText = "Volume On";
       audioOn = true;
-      playAudio(pausedAudio);
+      playAudio(pausedAudio, false)
     }
   }
 
@@ -365,13 +368,20 @@
   }
 
   function update() {
-    if (!paused) {
-      submarine.update(keys);
-      diver.update(keys);
-      camera.update();
-      particles.update();
-      countDownSeconds();
-      reduceHealth();
+    if (paused) return;
+    submarine.update(keys);
+    if (paused) return;
+    diver.update(keys);
+    camera.update();
+    particles.update();
+    countDownSeconds();
+    reduceHealth();
+    if (diver.isOutOfSub){
+      playAudio("diveTune", true)
+    }else{
+      console.log("spiting you")
+      playAudio("subTune", false)
+    }
 
       chests.forEach((chest, idx) => {
         chest.update();
@@ -408,22 +418,25 @@
         switchDirectionsPrompt();
         keys["q"] = false;
       }
-    }
-  }
+    };
 
   function switchDirectionsPrompt() {
-    goingUp.classList.remove("hidden");
     paused = true;
+    console.log("hit the bottom:", playingAudio)
+    pauseAudio(playingAudio);
+    goingUp.classList.remove("hidden");
   }
   function goUp() {
     submarine.isGoingDown = false;
     goingUp.classList.add("hidden");
     paused = false;
+    playAudio(pausedAudio, false);
   }
   function goDown() {
     submarine.isGoingDown = true;
     goingUp.classList.add("hidden");
     paused = false;
+    playAudio(pausedAudio, false);
   }
 
   function circlesCollide(x1, y1, r1, x2, y2, r2) {
