@@ -40,7 +40,7 @@ class Diver {
 
       if (keys[" "]) {
         particles.explode(this.x, this.y, "blue");
-        console.log("x: ", this.x, " y: ", this.y);
+        //console.log("x: ", this.x, " y: ", this.y);
       }
 
       let vx = Math.round(this.vx);
