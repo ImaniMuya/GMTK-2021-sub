@@ -60,10 +60,10 @@ class Submarine {
 
     if (keys[" "]) {
       particles.explode(this.x, this.y, "pink");
-      isGoingDown = false;
+      this.isGoingDown = false;
     }
 
-    this.vy = isGoingDown ? 2 : -2;
+    this.vy = this.isGoingDown ? 2 : -2;
     if (this.vy > 0) {
       //moving down
       for (let i = 0; i < this.vy; i++) {

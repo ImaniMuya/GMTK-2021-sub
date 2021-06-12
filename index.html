@@ -76,7 +76,7 @@
   var oxygenTimer;
   var dead;
   var map_data;
-  var isGoingDown = true;
+  // var isGoingDown = true;
   const TILES = {
     "255,174,201,255": null,
     "255,255,255,255": 0,
@@ -259,7 +259,7 @@
     const confirmAction = window.confirm("Going up?");
     console.log("propmt created");
     if (confirmAction) {
-      isGoingDown = false;
+      submarine.isGoingDown = false;
       console.log("up");
     } else {
       console.log("no");
