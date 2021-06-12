@@ -19,13 +19,13 @@ class Diver {
 
   update(keys) {
     // leave sub
-    if (keys["e"]) {
+    if (keys["w"]) {
       if (!this.isOutOfSub) {
         this.isOutOfSub = true;
       }
     }
     // reenters sub
-    if (keys["r"] && this.isOutOfSub && circlesCollide(submarine.cx, submarine.cy, submarine.h / 2, this.x, this.y, this.h / 2)) {
+    if (keys["e"] && this.isOutOfSub && circlesCollide(submarine.cx, submarine.cy, submarine.h / 2, this.x, this.y, this.h / 2)) {
       this.isOutOfSub = false;
     }
     // movement outside of sub
