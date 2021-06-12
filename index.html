@@ -41,10 +41,10 @@
       <h2>Press Start to Play!</h2>
       <button id="playBtn" onclick="startGame()" disabled>Start!</button>
     </div>
-    <div hidden id="goingUp">
+    <div class="hidden" id="goingUp">
       <h2>Going Up?</h2>
       <button id="goUpButton" onclick="goUp()">Up!</button>
-      <button id="goDownButton" onclick="goUp()">Nope!</button>
+      <button id="goDownButton" onclick="goDown()">Nope!</button>
     </div>
     <canvas id="canvas" class="hidden" width="1000" height="1000">Your browser doesn't support html5 canvas!</canvas>
     <canvas hidden id="renderer" width="1000" height="1000"></canvas>
@@ -248,7 +248,6 @@
     if (keys["g"]) {
       reduceHealth();
     }
-
     //placeholder for collecting treasure
     if (keys["c"]) {
       increasePoints();
@@ -259,7 +258,7 @@
       canvas.classList.add("hidden");
       startScreen.classList.remove("hidden");
     }
-
+    //trigger switch prompt
     if (keys["w"] && submarine.isGoingDown) {
       switchDirectionsPrompt();
       keys["w"] = false
@@ -268,15 +267,14 @@
 
   function switchDirectionsPrompt() {
     goingUp.classList.remove("hidden");
-    // const confirmAction = window.confirm("Going up?");
-    // console.log("propmt created");
-    // if (confirmAction) {
-    //   submarine.isGoingDown = false;
-    //   console.log("up");
-    // } else {
-    //   console.log("no");
-    //   // return;
-    // }
+  }
+  function goUp(){
+    submarine.isGoingDown = false;
+    goingUp.classList.add("hidden");
+  }
+  function goDown(){
+    submarine.isGoingDown = true;
+    goingUp.classList.add("hidden");
   }
 
   function circlesCollide(x1, y1, r1, x2, y2, r2) {
@@ -289,7 +287,6 @@
   }
 
   window.onkeydown = function (event) {
-    // console.log(event);
     const k = event.key;
     keys[k] = true;
   };
