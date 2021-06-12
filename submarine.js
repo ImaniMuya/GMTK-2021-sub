@@ -63,7 +63,13 @@ class Submarine {
       this.isGoingDown = false;
     }
 
-    this.vy = this.isGoingDown ? 2 : -2;
+    // this.vy = this.isGoingDown ? 2 : -2;
+    console.log("idm ", this.isGoingDown);
+    if (this.isGoingDown) {
+      this.vy = 2;
+    } else {
+      this.vy = -2;
+    }
     if (this.vy > 0) {
       //moving down
       for (let i = 0; i < this.vy; i++) {
