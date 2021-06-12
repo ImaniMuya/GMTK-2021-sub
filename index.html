@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GMTK 2021</title>
   </head>
+  <script>
+    var loadedImgs = 0;
+    function imageLoaded() {
+      loadedImgs++;
+    }
+  </script>
   <style>
     body {
       display: flex;
@@ -20,7 +26,7 @@
     #canvas {
       width: 100vmin;
       height: 100vmin;
-      background-color: pink;
+      background-color: rgb(255, 192, 203);
     }
     .hidden {
       display: none;
@@ -33,25 +39,31 @@
   <body>
     <div id="startScreen">
       <h2>Press Start to Play!</h2>
-      <button id="playBtn" onclick="startGame()">Start!</button>
+      <button id="playBtn" onclick="startGame()" disabled>Start!</button>
     </div>
     <canvas id="canvas" class="hidden" width="1000" height="1000">Your browser doesn't support html5 canvas!</canvas>
+    <canvas hidden id="renderer" width="1000" height="1000"></canvas>
+
+    <canvas hidden id="mapLoader" width="1000" height="2500"></canvas>
     <!-- assets -->
     <img src="./assets/filler-underwater-background.jpg" id="backgroundpic" hidden />
-    <img src="./assets/examplemap.png" id="cmapImg0" hidden />
+    <img src="./assets/examplemap.png" id="c_map" onload="imageLoaded()" hidden />
   </body>
 </html>
 <!-- Scripts -->
-<script src="collisionMap.js"></script>
 <script src="camera.js"></script>
 <script src="particles.js"></script>
+<script src="collisionMap.js"></script>
 <script src="diver.js"></script>
 <script src="submarine.js"></script>
 <script>
   const canvas = document.getElementById("canvas");
-  ctx = canvas.getContext("2d");
+  const renderer = document.getElementById("renderer");
+  const vis_ctx = canvas.getContext("2d");
+  const ctx = renderer.getContext("2d");
 
   const SIZE = 1000;
+  const MAP_H = 2500;
   const keys = {};
   var subLives;
   var diveLives;
@@ -61,6 +73,13 @@
   var diveTimeRemaining;
   var oxygenTimer;
   var dead;
+  var map_data;
+  const TILES = {
+    "255,174,201,255": null,
+    "255,255,255,255": 0,
+    "0,0,0,255": 1,
+    "255,127,39,255": 2,
+  };
   let done = false;
 
   // inits
@@ -83,10 +102,23 @@
     diveTimeRemaining = 10;
     oxygenTimer = setInterval(countDownSeconds, 1000);
     dead = false;
-    submarine.reset(0, 0);
-    diver.reset(0, 0);
+    submarine.reset(500, 50);
+    diver.reset(500, 0);
     tick();
   }
+
+  function initMap() {
+    if (loadedImgs == 1) {
+      const mlctx = mapLoader.getContext("2d");
+      mlctx.drawImage(c_map, 0, 0);
+      map_data = getCanvasData(mlctx);
+      flushToCanvas();
+      clearInterval(mapInitInterval);
+      playBtn.disabled = false;
+    }
+  }
+  let mapInitInterval = setInterval(initMap, 500);
+
   function tick() {
     update();
     draw();
@@ -149,13 +181,15 @@
   }
 
   function draw() {
-    ctx.save();
     ctx.clearRect(0, 0, SIZE, SIZE);
+    ctx.save();
 
-    const cameraBase = (camera.y / 10) % SIZE;
-    // ctx.drawImage(backgroundpic, 0, cameraBase, SIZE, SIZE);
-    // ctx.drawImage(backgroundpic, 0, cameraBase + SIZE, SIZE, SIZE);
-    // ctx.translate(camera.x, camera.y);
+    const cameraBase = (camera.y / 10) % MAP_H;
+    // ctx.drawImage(backgroundpic, 0, cameraBase, SIZE, MAP_H);
+    // ctx.drawImage(backgroundpic, 0, 0 + SIZE, SIZE, SIZE);
+    ctx.translate(camera.x, camera.y);
+    ctx.drawImage(c_map, 0, 0, SIZE, MAP_H);
+
     ctx.font = "italic 18px Arial";
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
@@ -170,7 +204,17 @@
     diver.draw(ctx);
     particles.draw(ctx);
 
+    if (cursor.y > 100 && map_data[cursor.y][cursor.x]) {
+      ctx.fillStyle = "purple";
+    } else {
+      ctx.fillStyle = "green";
+    }
+    ctx.fillRect(cursor.x, cursor.y, 10, 10);
+
     ctx.restore();
+
+    ctx.fillText(submarine.vy, 10, 100);
+    ctx.fillText(submarine.y, 10, 150);
   }
 
   function update() {
@@ -214,4 +258,13 @@
     const k = event.key;
     keys[k] = false;
   };
+
+  window.cursor = {
+    x: 0,
+    y: 0,
+  };
+  canvas.addEventListener("mousemove", (e) => {
+    cursor.x = Math.round((e.offsetX * canvas.width) / canvas.clientWidth);
+    cursor.y = Math.round((e.offsetY * canvas.height) / canvas.clientHeight);
+  });
 </script>
