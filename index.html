@@ -270,11 +270,6 @@
     particles.draw(ctx);
     chests.forEach((chest, idx) => chest.draw(ctx));
 
-    if (cursor.y > 100 && map_data[cursor.y][cursor.x]) {
-      ctx.fillStyle = "purple";
-    } else {
-      ctx.fillStyle = "green";
-    }
     ctx.fillRect(cursor.x, cursor.y, 10, 10);
 
     ctx.restore();
@@ -293,7 +288,7 @@
 
       chests.forEach((chest, idx) => {
         chest.update();
-        if (circlesCollide(diver.cx, diver.cy, diver.h / 2, chest.x, chest.y, chest.r)) {
+        if (diver.isOutOfSub && circlesCollide(diver.cx, diver.cy, diver.h / 2, chest.x, chest.y, chest.r)) {
           console.log("got it!!");
           increasePoints(chest.loot);
           chests.splice(idx, 1);
