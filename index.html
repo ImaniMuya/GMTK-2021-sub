@@ -99,7 +99,7 @@
       <div>Loot from your dive: <span id="treasureCount"></span>Coins</div>
       <div>Dive time: <span id="diveTime"></span></div>
       <div>
-        <button id="playBtn" onclick="goToMenu()">Continue</button>
+        <button id="continueBtn" onclick="goToMenu()">Continue</button>
       </div>
     </div>
     <div id="settingsScreen" class="hidden">
@@ -110,6 +110,11 @@
       </select>
       <button id="audioOnBtn" onclick="toggleAudio()" value="On">Volume On</button>
       <button id="menuBtn" onclick="goToMenu()">Back</button>
+    </div>
+    <div id="lossScreen" class="hidden goingUp">
+      <h2>Uh Oh</h2>
+      <div>You ran out to time</div>
+      <button id="lossBtn" onclick="goToMenu()">Back to Menu</button>
     </div>
     <div class="hidden goingUp" id="goingUp">
       <h2>Going Up?</h2>
@@ -191,6 +196,7 @@
     settingsScreen.classList.add("hidden");
     score.classList.add("hidden");
     canvas.classList.add("hidden");
+    lossScreen.classList.add("hidden");
   }
   function showScore() {
     score.classList.remove("hidden");
@@ -306,7 +312,8 @@
   function deathByTime() {
     if (subTimeRemaining <= 0 || diveTimeRemaining <= 0) {
       console.log("YOU DIED");
-      dead = true;
+      done = true;
+      lossScreen.classList.remove("hidden");
     }
   }
 
@@ -384,7 +391,7 @@
         increasePoints();
       }
       // end game
-      if (keys["Escape"] || dead) {
+      if (keys["Escape"]) {
         done = true;
         goToMenu();
       }
