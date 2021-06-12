@@ -181,10 +181,10 @@
   // reduce the time
   function countDownSeconds() {
     if (diver.isOutOfSub == true) {
-      diveTimeRemaining = diveTimeRemaining - 1/60;
+      diveTimeRemaining = diveTimeRemaining - 1 / 60;
     } else {
       diveTimeRemaining = 10;
-      subTimeRemaining = subTimeRemaining - 1/60;
+      subTimeRemaining = subTimeRemaining - 1 / 60;
     }
     deathByTime();
   }
@@ -268,12 +268,12 @@
   }
 
   function update() {
-    if (!paused){
+    if (!paused) {
       submarine.update(keys);
       diver.update(keys);
       camera.update();
       particles.update();
-      countDownSeconds()
+      countDownSeconds();
 
       //placeholder for colliding and reducing health
       if (keys["g"]) {

@@ -8,8 +8,7 @@ class Camera {
     if (diver.isOutOfSub) {
       return;
     }
-    if (this.y < -2500 + this.h) {
-      console.log("floor hit");
+    if (this.y < -2500 + this.h && submarine.isGoingDown) {
       return;
     }
     this.x = 0;

@@ -24,17 +24,17 @@ class Submarine {
     if (diver.isOutOfSub) {
       return;
     }
+    // check if on bottom
+    if (this.y > 2416 && this.isGoingDown) {
+      switchDirectionsPrompt();
+    }
+
     if (keys["a"]) {
       this.vx = -this.speed;
     }
     if (keys["d"]) {
       this.vx = +this.speed;
     }
-    // // Allowed one switch per level
-    // if (keys["w"]) {
-    //   // TODO: prompt switch, are you sure?
-    //   this.isGoingDown = false;
-    // }
 
     let vx = Math.round(this.vx);
     let bottom = this.y + this.h;
