@@ -50,11 +50,41 @@
 <script>
   const canvas = document.getElementById("canvas");
   ctx = canvas.getContext("2d");
+
+  const SIZE = 1000;
+  const keys = {};
+  var subLives;
+  var diveLives;
+  var hitGrace;
+  var points;
+  var subTimeRemaining;
+  var diveTimeRemaining;
+  var oxygenTimer;
+  var dead;
+  let done = false;
+
+  // inits
+  let submarine = new Submarine();
+  let diver = new Diver();
+  let camera = new Camera();
+  let particles = new Particles();
+
   function startGame() {
     canvas.classList.remove("hidden");
     startScreen.classList.add("hidden");
     done = false;
     // RESET GAME HERE
+    console.log("starting");
+    subLives = 3;
+    diveLives = 3;
+    hitGrace = 0;
+    points = 0;
+    subTimeRemaining = 60;
+    diveTimeRemaining = 10;
+    oxygenTimer = setInterval(countDownSeconds, 1000);
+    dead = false;
+    submarine.reset(0, 0);
+    diver.reset(0, 0);
     tick();
   }
   function tick() {
@@ -64,22 +94,6 @@
       requestAnimationFrame(tick);
     }
   }
-
-  const SIZE = 1000;
-  const keys = {};
-  var lives = 3;
-  var points = 0;
-  var subTimeRemaining = 60;
-  var diveTimeRemaining = 10;
-  var timer = setInterval(countDownSeconds, 1000);
-  var dead = false;
-  let done = false;
-
-  // inits
-  let submarine = new Submarine();
-  let diver = new Diver();
-  let camera = new Camera();
-  let particles = new Particles();
 
   // reduce the time
   function countDownSeconds() {
@@ -96,8 +110,41 @@
   function deathByTime() {
     if (subTimeRemaining == 0 || diveTimeRemaining == 0) {
       console.log("YOU DIED");
-      window.clearInterval(timer);
+      window.clearInterval(oxygenTimer);
       dead = true;
+    }
+  }
+
+  //when you run out of lives
+  function deathByBlows() {
+    if (subLives == 0 || diveLives == 0) {
+      console.log("YOU DIED");
+      window.clearInterval(oxygenTimer);
+      dead = true;
+    }
+  }
+
+  function reduceHealth() {
+    if (hitGrace == 0) {
+      if (diver.isOutOfSub) {
+        diveLives = diveLives - 1;
+      } else {
+        subLives = subLives - 1;
+      }
+      hitGrace = hitGrace + 0.5;
+      var hitTimer = setTimeout(updateHitGrace, 1000);
+      deathByBlows();
+    }
+  }
+
+  //determine how soon health can be reduced again
+  function updateHitGrace() {
+    hitGrace = hitGrace - 0.5;
+  }
+
+  function increasePoints() {
+    if (diver.isOutOfSub) {
+      points = points + 1;
     }
   }
 
@@ -113,8 +160,9 @@
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "red";
-    ctx.fillText("Lives Left: " + lives, 30, 25);
-    ctx.fillText("Treasure Points: " + points, 30, 50);
+    ctx.fillText("Sub Lives Left: " + subLives, 30, 25);
+    ctx.fillText("Dive Lives Left: " + diveLives, 30, 50);
+    ctx.fillText("Treasure Points: " + points, 30, 75);
     ctx.fillText("Sub Time Remaining: " + subTimeRemaining, 500, 25);
     ctx.fillText("Dive Time Remaining: " + diveTimeRemaining, 500, 50);
 
@@ -131,6 +179,28 @@
     camera.update();
     particles.update();
 
+    //placeholder for colliding and reducing health
+    if (keys["g"]) {
+      reduceHealth();
+    }
+
+    //placeholder for collecting treasure
+    if (keys["c"]) {
+      increasePoints();
+    }
+
+    // leave sub
+    if (keys["e"]) {
+      if (!diver.isOutOfSub) {
+        diver.isOutOfSub = true;
+        diver.y = diver.y + 60;
+      }
+    }
+    // reenters sub
+    if (keys["r"] && circlesCollide(submarine.cx, submarine.cy, submarine.h / 2, diver.x, diver.y, diver.h / 2)) {
+      console.log("re-enter sub");
+      diver.isOutOfSub = false;
+    }
     // end game
     if (keys["Escape"] || dead == true) {
       done = true;

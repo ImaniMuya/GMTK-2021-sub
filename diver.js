@@ -51,6 +51,11 @@ class Diver {
       this.y = submarine.y;
     }
   }
+  reset(xcord,ycord) {
+    this.x = xcord
+    this.y = ycord
+    this.isOutOfSub = false
+  }
 
   draw(ctx) {
     if (!this.isOutOfSub) {

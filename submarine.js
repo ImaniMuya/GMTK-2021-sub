@@ -32,6 +32,10 @@ class Submarine {
     this.x += this.vx;
     this.y += 1.25;
   }
+  reset(xcord,ycord) {
+    this.x = xcord
+    this.y = ycord
+  }
 
   draw(ctx) {
     ctx.fillStyle = "green";
