@@ -29,7 +29,7 @@
       color: white;
       border-radius: 3px;
       box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.658);
-    /* cursor: pointer; */
+      cursor: pointer;
     }
 
     button:active {
@@ -87,6 +87,7 @@
         <option value="1">Medium</option>
         <option value="2">Hard</option>
       </select>
+      <button id="audioOnBtn" onclick="toggleAudio()" value="On">Volume On</button>
       <button id="menuBtn" onclick="goToMenu()">Back</button>
     </div>
     <div class="hidden goingUp" id="goingUp">
@@ -103,7 +104,11 @@
     <!-- assets -->
     <img src="./assets/filler-underwater-background.jpg" id="backgroundpic" hidden />
     <img src="./assets/lvl1.png" id="c_map" onload="imageLoaded()" hidden />
-    <audio id="menuTune" preload="auto" src="./assets/menu_concept_1.mp3" type="audio/mpeg">Your browser does not support the audio element</audio>
+    <audio id="menuTune" preload="auto" src="./assets/menu v3.mp3" type="audio/mpeg">Your browser does not support the audio element</audio>
+    <audio id="subTune" preload="auto" src="./assets/in-sub v2.mp3" type="audio/mpeg"></audio>
+    <audio id="diveTune" preload="auto" src="./assets/diver v2.mp3" type="audio/mpeg"></audio>
+    <audio id="deathTune" preload="auto" src="./assets/drown sfx v2.mp3" type="audio/mpeg"></audio>
+    <audio id="treasureTune" preload="auto" src="./assets/gold sfx v2.mp3" type="audio/mpeg"></audio>
   </body>
 </html>
 
@@ -133,6 +138,10 @@
   var dead;
   var map_data;
   var paused;
+  var playingAudio;
+  var pausedAudio;
+  var audioOn = true;
+  var track = "menuTune"
   var difficultyLevel;
   const TILES = {
     "255,174,201,255": null,
@@ -146,8 +155,6 @@
   let diver = new Diver();
   let camera = new Camera();
   let particles = new Particles();
-  // level 1 chests
-  // let chests = [new Treasure(500, 500, 10), new Treasure(500, 100, 1)];
   let chests = getChests(1);
 
   function goToSettings() {
@@ -159,6 +166,7 @@
     menu.classList.remove("hidden");
     settingsScreen.classList.add("hidden");
     canvas.classList.add("hidden");
+    playAudio("menuTune");
   }
 
   function startGame(lvl) {
@@ -183,7 +191,7 @@
     camera.x = 0;
     camera.y = 0;
     chests = getChests(lvl);
-    // playAudio();
+    playAudio("subTune");
     paused = false;
     tick();
   }
@@ -193,10 +201,37 @@
     difficultyLevel = chosenDifficultyLevel.options[chosenDifficultyLevel.selectedIndex].value;
   }
 
-  function playAudio() {
-    var audio = document.getElementById("menuTune");
-    audio.currentTime = 0;
-    audio.play();
+  function playAudio(track) {
+    if (audioOn && playingAudio != track) {
+      if (playingAudio) {pauseAudio(playingAudio)}
+      var audio = document.getElementById(track);
+      audio.currentTime = 0;
+      audio.play();
+      playingAudio = track
+    }
+    console.log("current audio:", playingAudio)
+  }
+
+  function pauseAudio(track) {
+      var audio = document.getElementById(track);
+      audio.pause(track);
+      playingAudio = ""
+      pausedAudio = track
+  }
+
+  function toggleAudio() {
+    var audioOnBtn = document.getElementById("audioOnBtn");
+    if(audioOnBtn.value == "On"){
+      audioOnBtn.value = "Off";
+      audioOnBtn.innerText = "Volume Off";
+      audioOn = false;
+      pauseAudio(playingAudio)
+    }else {
+      audioOnBtn.value= "On";
+      audioOnBtn.innerText = "Volume On";
+      audioOn = true;
+      playAudio(pausedAudio)
+    }
   }
 
   function initMap() {
@@ -292,8 +327,6 @@
     particles.draw(ctx);
     chests.forEach((chest, idx) => chest.draw(ctx));
 
-    // ctx.fillRect(cursor.x, cursor.y, 10, 10);
-
     ctx.restore();
 
     ctx.fillText(submarine.vy, 10, 100);
@@ -370,13 +403,4 @@
     const k = event.key;
     keys[k] = false;
   };
-
-  // window.cursor = {
-  //   x: 0,
-  //   y: 0,
-  // };
-  // canvas.addEventListener("mousemove", (e) => {
-  //   cursor.x = Math.round((e.offsetX * canvas.width) / canvas.clientWidth);
-  //   cursor.y = Math.round((e.offsetY * canvas.height) / canvas.clientHeight);
-  // });
 </script>
