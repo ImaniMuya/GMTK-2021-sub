@@ -23,10 +23,44 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
+    button {
+      padding: 5px 10px;
+      background-color: teal;
+      color: white;
+      border-radius: 3px;
+      box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.658);
+      cursor: pointer;
+    }
+
+    button:active {
+      box-shadow: inset 1px 1px 10px #333;
+    }
+
     #canvas {
       width: 100vmin;
       height: 100vmin;
       background-color: rgb(255, 192, 203);
+    }
+    .goingUp {
+      position: absolute;
+      display: block;
+      left: 0;
+      right: 0;
+      margin-left: auto;
+      margin-right: auto;
+      width: 500px;
+      background-color: rgba(128, 128, 128, 0.445);
+      padding: 20px;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      align-items: center;
+    }
+    .btn-group {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-evenly;
+      gap: 2rem;
     }
     .hidden {
       display: none;
@@ -41,10 +75,12 @@
       <h2>Press Start to Play!</h2>
       <button id="playBtn" onclick="startGame()" disabled>Start!</button>
     </div>
-    <div class="hidden" id="goingUp">
+    <div class="hidden goingUp" id="goingUp">
       <h2>Going Up?</h2>
-      <button id="goUpButton" onclick="goUp()">Up!</button>
-      <button id="goDownButton" onclick="goDown()">Nope!</button>
+      <div class="btn-group">
+        <button id="goUpButton" onclick="goUp()">Up!</button>
+        <button id="goDownButton" onclick="goDown()">Nope!</button>
+      </div>
     </div>
     <canvas id="canvas" class="hidden" width="1000" height="1000">Your browser doesn't support html5 canvas!</canvas>
     <canvas hidden id="renderer" width="1000" height="1000"></canvas>
@@ -267,11 +303,11 @@
   function switchDirectionsPrompt() {
     goingUp.classList.remove("hidden");
   }
-  function goUp(){
+  function goUp() {
     submarine.isGoingDown = false;
     goingUp.classList.add("hidden");
   }
-  function goDown(){
+  function goDown() {
     submarine.isGoingDown = true;
     goingUp.classList.add("hidden");
   }
