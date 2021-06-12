@@ -11,6 +11,7 @@ class Submarine {
   boost = 0;
 
   isGoingDown = true;
+  takingDamage = false;
 
   get cx() {
     return this.x + this.w / 2;
@@ -46,9 +47,11 @@ class Submarine {
         let y_cls = getCollisionRight(right + 1, bottom, this.h);
         if (y_cls == null) {
           this.x++;
+          this.takingDamage = false;
         } else {
           //hit wall
           this.vx = 0;
+          this.takingDamage = true;
         }
       }
     } else if (vx < 0) {
@@ -57,9 +60,11 @@ class Submarine {
         let y_cls = getCollisionLeft(this.x, bottom, this.h);
         if (y_cls == null) {
           this.x--;
+          this.takingDamage = false;
         } else {
           //hit wall
           this.vx = 0;
+          this.takingDamage = true;
         }
       }
     }
@@ -83,6 +88,7 @@ class Submarine {
         let x_cls = getCollisionDown(bottom, this.x, this.w);
         if (x_cls == null) {
           this.y++;
+          this.takingDamage = false;
         } else {
           //landed on something
           if (this.boost) {
@@ -99,12 +105,14 @@ class Submarine {
         let x_cls = getCollisionUp(this.y, this.x, this.w);
         if (x_cls == null) {
           this.y--;
+          this.takingDamage = false;
         } else {
           if (this.boost) {
             this.y += 1.3;
             this.boost--;
           } else {
             this.vy = 0;
+            this.takingDamage = true;
           }
         }
       }
