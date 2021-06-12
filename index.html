@@ -74,7 +74,16 @@
     <div id="startScreen">
       <h2>Press Start to Play!</h2>
       <button id="playBtn" onclick="startGame()" disabled>Start!</button>
+      <button id="settingsBtn" onclick="goToSettings()">Settings</button>
     </div>
+    <div id="settingsScreen" class="hidden">
+      <select id="difficulty">
+        <option value="0" selected>Easy</option>
+        <option value="1">Medium</option>
+        <option value="2">Hard</option>
+      </select>
+      <button id="menuBtn" onclick="goToMenu()">Back</button>
+    </div>    
     <div class="hidden goingUp" id="goingUp">
       <h2>Going Up?</h2>
       <div class="btn-group">
@@ -117,6 +126,7 @@
   var dead;
   var map_data;
   var paused;
+  var difficultyLevel;
   // var isGoingDown = true;
   const TILES = {
     "255,174,201,255": null,
@@ -131,7 +141,18 @@
   let camera = new Camera();
   let particles = new Particles();
 
+  function goToSettings(){
+    startScreen.classList.add("hidden");
+    settingsScreen.classList.remove("hidden");
+  }
+  function goToMenu(){
+    startScreen.classList.remove("hidden");
+    settingsScreen.classList.add("hidden");
+    canvas.classList.add("hidden");
+  }
+
   function startGame() {
+    updateDifficulty();
     canvas.classList.remove("hidden");
     startScreen.classList.add("hidden");
     done = false;
@@ -147,9 +168,16 @@
     submarine.reset(500, 50);
     diver.reset(500, 0);
     submarine.isGoingDown = true;
+    camera.x = 0
+    camera.y = 0
     // playAudio();
     paused = false;
     tick();
+  }
+
+  function updateDifficulty(){
+    var chosenDifficultyLevel = document.getElementById("difficulty");
+    difficultyLevel = chosenDifficultyLevel.options[chosenDifficultyLevel.selectedIndex].value;     
   }
 
   function playAudio() {
@@ -206,16 +234,12 @@
   }
 
   function reduceHealth() {
-    if (hitGrace == 0) {
-      if (diver.isOutOfSub) {
-        diveLives = diveLives - 1;
-      } else {
-        subLives = subLives - 1;
+    if (hitGrace == 0 && submarine.takingDamage) {
+        subLives = subLives - difficultyLevel;
+        hitGrace = hitGrace + 0.5;
+        var hitTimer = setTimeout(updateHitGrace, 1000);
+        deathByBlows();
       }
-      hitGrace = hitGrace + 0.5;
-      var hitTimer = setTimeout(updateHitGrace, 1000);
-      deathByBlows();
-    }
   }
 
   //determine how soon health can be reduced again
@@ -274,6 +298,7 @@
       camera.update();
       particles.update();
       countDownSeconds();
+      reduceHealth();
 
       //placeholder for colliding and reducing health
       if (keys["g"]) {
@@ -286,8 +311,7 @@
       // end game
       if (keys["Escape"] || dead || submarine.y <= 0) {
         done = true;
-        canvas.classList.add("hidden");
-        startScreen.classList.remove("hidden");
+        goToMenu();
       }
       //trigger switch prompt
       if (keys["w"] && submarine.isGoingDown) {
