@@ -38,9 +38,6 @@
     <canvas id="canvas" class="hidden" width="1000" height="1000">Your browser doesn't support html5 canvas!</canvas>
     <!-- assets -->
     <img src="./assets/filler-underwater-background.jpg" id="backgroundpic" hidden />
-    <div id="hud" class="hidden" >
-      <h3>This is an overlay</h3>
-    </div>
   </body>
 </html>
 <!-- Scripts -->
@@ -53,9 +50,7 @@
   ctx = canvas.getContext("2d");
   function startGame() {
     canvas.classList.remove("hidden");
-    // hud.classList.remove("hidden");
     startScreen.classList.add("hidden");
-
     done = false;
     tick();
   }
@@ -73,8 +68,8 @@
   var points = 0;
   var subTimeRemaining = 60;
   var diveTimeRemaining = 10;
-  var subTimer = setInterval(countDownSeconds, 1000);
-  var isOutOfSub = true;
+  var timer = setInterval(countDownSeconds, 1000);
+  var dead = false;
   let done = false;
 
   // inits
@@ -83,12 +78,23 @@
   let camera = new Camera();
   let particles = new Particles();
 
+  // reduce the time
   function countDownSeconds() {
     subTimeRemaining = subTimeRemaining - 1;
-    if (isOutOfSub == true){
+    if (diver.isOutOfSub == true){
       diveTimeRemaining = diveTimeRemaining - 1;
     }
     else {diveTimeRemaining = 10}
+    deathByTime()
+  }
+
+  // when you run out of time
+  function deathByTime() {
+    if (subTimeRemaining == 0 || diveTimeRemaining == 0) {
+      console.log('YOU DIED');
+      window.clearInterval(timer);
+      dead = true;
+    }
   }
 
   function draw() {
@@ -102,8 +108,8 @@
     ctx.font = 'italic 18px Arial';
     ctx.textAlign = 'left';
     ctx. textBaseline = 'middle';
-    ctx.fillStyle = 'red';  // a color name or by using rgb/rgba/hex values
-    ctx.fillText('Lives Left: ' + lives, 30, 25); // text and position
+    ctx.fillStyle = 'red';
+    ctx.fillText('Lives Left: ' + lives, 30, 25);
     ctx.fillText('Treasure Points: ' + points, 30, 50)
     ctx.fillText('Sub Time Remaining: ' + subTimeRemaining, 500, 25)
     ctx.fillText('Dive Time Remaining: ' + diveTimeRemaining, 500, 50)
@@ -134,7 +140,7 @@
       diver.isOutOfSub = false;
     }
     // end game
-    if (keys["Escape"]) {
+    if (keys["Escape"] || dead == true) {
       done = true;
       canvas.classList.add("hidden");
       startScreen.classList.remove("hidden");
