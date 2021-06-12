@@ -13,7 +13,6 @@ class Camera {
       return;
     }
     this.x = 0;
-    // this.y = isGoingDown ? this.y - 1 : this.y + 1;
     if (submarine.isGoingDown) {
       this.y -= 1;
     } else {

@@ -7,7 +7,7 @@ class Diver {
 
   w = 20;
   h = 30;
-  speed = 1;
+  speed = 2;
   isOutOfSub = false;
 
   get cx() {
@@ -22,7 +22,6 @@ class Diver {
     if (keys["e"]) {
       if (!diver.isOutOfSub) {
         diver.isOutOfSub = true;
-        diver.y = diver.y + 60;
       }
     }
     // reenters sub
@@ -44,17 +43,65 @@ class Diver {
         particles.explode(this.x, this.y, "blue");
       }
 
-      this.x += this.vx;
-      this.y += this.vy;
+      let vx = Math.round(this.vx);
+      let bottom = this.y + this.h;
+      let right = this.x + this.w;
+
+      if (vx > 0) {
+        //moving right
+        for (let i = 0; i < vx; i++) {
+          let y_cls = getCollisionRight(right + 1, bottom, this.h);
+          if (y_cls == null) {
+            this.x++;
+          } else {
+            //hit wall
+            this.vx = 0;
+          }
+        }
+      } else if (vx < 0) {
+        //moving left
+        for (let i = 0; i > vx; i--) {
+          let y_cls = getCollisionLeft(this.x, bottom, this.h);
+          if (y_cls == null) {
+            this.x--;
+          } else {
+            //hit wall
+            this.vx = 0;
+          }
+        }
+      }
+
+      if (this.vy > 0) {
+        //moving down
+        for (let i = 0; i < this.vy; i++) {
+          let x_cls = getCollisionDown(bottom, this.x, this.w);
+          if (x_cls == null) {
+            this.y++;
+          } else {
+            //landed on something
+            this.vy = 0;
+          }
+        }
+      } else if (this.vy < 0) {
+        //moving up
+        for (let i = 0; i > this.vy; i--) {
+          let x_cls = getCollisionUp(this.y, this.x, this.w);
+          if (x_cls == null) {
+            this.y--;
+          } else {
+            this.vy = 0;
+          }
+        }
+      }
     } else {
       this.x = submarine.x;
       this.y = submarine.y;
     }
   }
-  reset(xcord,ycord) {
-    this.x = xcord
-    this.y = ycord
-    this.isOutOfSub = false
+  reset(xcord, ycord) {
+    this.x = xcord;
+    this.y = ycord;
+    this.isOutOfSub = false;
   }
 
   draw(ctx) {

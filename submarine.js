@@ -7,7 +7,7 @@ class Submarine {
 
   w = 50;
   h = 50;
-  speed = 5;
+  speed = 2;
   boost = 0;
 
   isGoingDown = true;
@@ -72,7 +72,6 @@ class Submarine {
       }
     }
 
-    // this.vy = this.isGoingDown ? 2 : -2;
     if (this.isGoingDown) {
       this.vy = 2;
     } else {
