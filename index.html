@@ -41,6 +41,19 @@
       height: 100vmin;
       background-color: rgb(255, 192, 203);
     }
+    .scoreCard {
+      color: white;
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      left: 0;
+      right: 0;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 20px;
+      width: 500px;
+      background-color: pink;
+    }
     .goingUp {
       position: absolute;
       display: block;
@@ -80,6 +93,14 @@
       <button id="level2" value="2" onclick="startGame(2)">Level2</button>
       <button id="level3" value="3" onclick="startGame(3)">Level3</button>
       <button id="settingsBtn" onclick="goToSettings()">Settings</button>
+    </div>
+    <div id="score" class="scoreCard">
+      <h2>Your Score!</h2>
+      <div>Loot from your dive: <span id="treasureCount"></span></div>
+      <div>Dive time: <span id="diveTime"></span></div>
+      <div>
+        <button id="playBtn" onclick="goToMenu()">Continue</button>
+      </div>
     </div>
     <div id="settingsScreen" class="hidden">
       <select id="difficulty">
@@ -151,6 +172,7 @@
     "0,0,0,255": 1,
   };
   let done = false;
+  let win = false;
 
   // inits
   let submarine = new Submarine();
@@ -168,8 +190,19 @@
     startScreen.classList.add("hidden");
     menu.classList.remove("hidden");
     settingsScreen.classList.add("hidden");
+    score.classList.add("hidden");
+    canvas.classList.add("hidden");
+  }
+  function showScore() {
+    score.classList.remove("hidden");
+    startScreen.classList.add("hidden");
+    menu.classList.add("hidden");
+    settingsScreen.classList.add("hidden");
     canvas.classList.add("hidden");
     playAudio("menuTune", true);
+    // tally
+    treasureCount.innerText = points;
+    diveTime.innerText = subTimeRemaining;
   }
 
   function startGame(lvl) {
@@ -228,13 +261,13 @@
 
   function toggleAudio() {
     var audioOnBtn = document.getElementById("audioOnBtn");
-    if(audioOnBtn.value == "On"){
+    if (audioOnBtn.value == "On") {
       audioOnBtn.value = "Off";
       audioOnBtn.innerText = "Volume Off";
       audioOn = false;
-      pauseAudio(playingAudio)
-    }else {
-      audioOnBtn.value= "On";
+      pauseAudio(playingAudio);
+    } else {
+      audioOnBtn.value = "On";
       audioOnBtn.innerText = "Volume On";
       audioOn = true;
       playAudio(pausedAudio, false)
@@ -343,35 +376,42 @@
       playAudio("subTune", false)
     }
 
-    chests.forEach((chest, idx) => {
-      chest.update();
-      if (diver.isOutOfSub && circlesCollide(diver.cx, diver.cy, diver.h / 2, chest.x, chest.y, chest.r)) {
-        console.log("got it!!");
-        increasePoints(chest.loot);
-        chests.splice(idx, 1);
-      }
-    });
+      chests.forEach((chest, idx) => {
+        chest.update();
+        if (diver.isOutOfSub && circlesCollide(diver.cx, diver.cy, diver.h / 2, chest.x, chest.y, chest.r)) {
+          console.log("got it!!");
+          increasePoints(chest.loot);
+          chests.splice(idx, 1);
+        }
+      });
 
-    //placeholder for colliding and reducing health
-    if (keys["g"]) {
-      reduceHealth();
-    }
-    //placeholder for collecting treasure
-    if (keys["c"]) {
-      increasePoints();
-    }
-    // end game
-    if (keys["Escape"] || dead || submarine.y <= 0) {
-      done = true;
-      goToMenu();
-    }
-    //trigger switch prompt
-    if (keys["q"] && submarine.isGoingDown) {
-      switchDirectionsPrompt();
-      keys["q"] = false;
-    }
-    
-  }
+      //placeholder for colliding and reducing health
+      if (keys["g"]) {
+        reduceHealth();
+      }
+      //placeholder for collecting treasure
+      if (keys["c"]) {
+        increasePoints();
+      }
+      // end game
+      if (keys["Escape"] || dead) {
+        done = true;
+        goToMenu();
+      }
+
+      // win
+      if (submarine.y <= 0 && subTimeRemaining > 0) {
+        win = true;
+        done = true;
+        showScore();
+      }
+
+      //trigger switch prompt
+      if (keys["q"] && submarine.isGoingDown) {
+        switchDirectionsPrompt();
+        keys["q"] = false;
+      }
+    };
 
   function switchDirectionsPrompt() {
     paused = true;
