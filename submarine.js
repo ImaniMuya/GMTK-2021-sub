@@ -8,6 +8,7 @@ class Submarine {
   w = 50;
   h = 50;
   speed = 5;
+  boost = 0;
 
   isGoingDown = true;
 
@@ -28,6 +29,11 @@ class Submarine {
     }
     if (keys["d"]) {
       this.vx = +this.speed;
+    }
+    // Allowed one switch per level
+    if (keys["w"]) {
+      // TODO: prompt switch, are you sure?
+      this.isGoingDown = false;
     }
 
     let vx = Math.round(this.vx);
@@ -60,6 +66,10 @@ class Submarine {
 
     if (keys[" "]) {
       particles.explode(this.x, this.y, "pink");
+      this.boost++;
+      if (this.boost >= 10) {
+        this.boost = 0;
+      }
     }
 
     // this.vy = this.isGoingDown ? 2 : -2;
@@ -76,7 +86,12 @@ class Submarine {
           this.y++;
         } else {
           //landed on something
-          this.vy = 0;
+          if (this.boost) {
+            this.y -= 1.3;
+            this.boost--;
+          } else {
+            this.vy = 0;
+          }
         }
       }
     } else if (this.vy < 0) {
