@@ -43,13 +43,16 @@
     </div>
     <canvas id="canvas" class="hidden" width="1000" height="1000">Your browser doesn't support html5 canvas!</canvas>
     <canvas hidden id="renderer" width="1000" height="1000"></canvas>
-
     <canvas hidden id="mapLoader" width="1000" height="2500"></canvas>
+
     <!-- assets -->
     <img src="./assets/filler-underwater-background.jpg" id="backgroundpic" hidden />
-    <img src="./assets/examplemap.png" id="c_map" onload="imageLoaded()" hidden />
+    <img src="./assets/lvl1.png" id="c_map" onload="imageLoaded()" hidden />
+    
+    <audio id="menuTune" preload="auto" src="./tunes/menu_concept_1.mp3" type="audio/mpeg">Your browser does not support the audio element</audio>
   </body>
 </html>
+
 <!-- Scripts -->
 <script src="camera.js"></script>
 <script src="particles.js"></script>
@@ -73,6 +76,7 @@
   var diveTimeRemaining;
   var oxygenTimer;
   var dead;
+  var howFarDown;
   var map_data;
   const TILES = {
     "255,174,201,255": null,
@@ -102,10 +106,22 @@
     diveTimeRemaining = 10;
     oxygenTimer = setInterval(countDownSeconds, 1000);
     dead = false;
+    howFarDown = 10;
     submarine.reset(500, 50);
     diver.reset(500, 0);
+    playAudio()
     tick();
   }
+
+  menuAudio=document.getElementById('menuTune');
+  menuAudio.currentTime = 12;
+  menuAudio.play();
+
+  function playAudio(){
+	var audio= document.getElementById("menuTune");
+	audio.currentTime=0;
+	audio.play();	
+	}
 
   function initMap() {
     if (loadedImgs == 1) {
@@ -194,11 +210,11 @@
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "red";
-    ctx.fillText("Sub Lives Left: " + subLives, 30, 25);
-    ctx.fillText("Dive Lives Left: " + diveLives, 30, 50);
-    ctx.fillText("Treasure Points: " + points, 30, 75);
-    ctx.fillText("Sub Time Remaining: " + subTimeRemaining, 500, 25);
-    ctx.fillText("Dive Time Remaining: " + diveTimeRemaining, 500, 50);
+    ctx.fillText("Sub Lives Left: " + subLives, 30, 25 + howFarDown);
+    ctx.fillText("Dive Lives Left: " + diveLives, 30, 50 + howFarDown);
+    ctx.fillText("Treasure Points: " + points, 30, 75 + howFarDown);
+    ctx.fillText("Sub Time Remaining: " + subTimeRemaining, 500, 25 + howFarDown);
+    ctx.fillText("Dive Time Remaining: " + diveTimeRemaining, 500, 50 + howFarDown);
 
     submarine.draw(ctx);
     diver.draw(ctx);
@@ -218,6 +234,7 @@
   }
 
   function update() {
+    howFarDown = howFarDown + 1;
     submarine.update(keys);
     diver.update(keys);
     camera.update();
