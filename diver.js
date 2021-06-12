@@ -18,6 +18,19 @@ class Diver {
   }
 
   update(keys) {
+    // leave sub
+    if (keys["e"]) {
+      if (!diver.isOutOfSub) {
+        diver.isOutOfSub = true;
+        diver.y = diver.y + 60;
+      }
+    }
+    // reenters sub
+    if (keys["r"] && circlesCollide(submarine.cx, submarine.cy, submarine.h / 2, diver.x, diver.y, diver.h / 2)) {
+      console.log("re-enter sub");
+      diver.isOutOfSub = false;
+    }
+    // movement outside of sub
     if (this.isOutOfSub) {
       this.vx = 0;
       this.vy = 0;
@@ -40,6 +53,9 @@ class Diver {
   }
 
   draw(ctx) {
+    if (!this.isOutOfSub) {
+      return;
+    }
     ctx.fillStyle = "blue";
     ctx.fillRect(this.x, this.y, 20, 30);
   }
