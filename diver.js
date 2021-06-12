@@ -7,7 +7,7 @@ class Diver {
 
   w = 20;
   h = 30;
-  speed = 2;
+  speed = 3;
   isOutOfSub = false;
 
   get cx() {
@@ -20,14 +20,13 @@ class Diver {
   update(keys) {
     // leave sub
     if (keys["e"]) {
-      if (!diver.isOutOfSub) {
-        diver.isOutOfSub = true;
+      if (!this.isOutOfSub) {
+        this.isOutOfSub = true;
       }
     }
     // reenters sub
-    if (keys["r"] && circlesCollide(submarine.cx, submarine.cy, submarine.h / 2, diver.x, diver.y, diver.h / 2)) {
-      console.log("re-enter sub");
-      diver.isOutOfSub = false;
+    if (keys["r"] && this.isOutOfSub && circlesCollide(submarine.cx, submarine.cy, submarine.h / 2, this.x, this.y, this.h / 2)) {
+      this.isOutOfSub = false;
     }
     // movement outside of sub
     if (this.isOutOfSub) {
@@ -41,6 +40,7 @@ class Diver {
 
       if (keys[" "]) {
         particles.explode(this.x, this.y, "blue");
+        console.log("x: ", this.x, " y: ", this.y);
       }
 
       let vx = Math.round(this.vx);

@@ -97,6 +97,7 @@
 <script src="camera.js"></script>
 <script src="particles.js"></script>
 <script src="collisionMap.js"></script>
+<script src="treasure.js"></script>
 <script src="diver.js"></script>
 <script src="submarine.js"></script>
 <script>
@@ -130,6 +131,20 @@
   let diver = new Diver();
   let camera = new Camera();
   let particles = new Particles();
+  // level 1 chests
+  // let chests = [new Treasure(500, 500, 10), new Treasure(500, 100, 1)];
+  let chests = [
+    new Treasure(300, 356, 2),
+    new Treasure(636, 524, 2),
+    new Treasure(906, 860, 3),
+    new Treasure(294, 734, 3),
+    new Treasure(182, 1070, 5),
+    new Treasure(591, 1004, 5),
+    new Treasure(717, 1313, 7),
+    new Treasure(198, 1345, 7),
+    new Treasure(510, 2068, 9),
+    new Treasure(705, 2438, 10),
+  ];
 
   function startGame() {
     canvas.classList.remove("hidden");
@@ -223,9 +238,9 @@
     hitGrace = hitGrace - 0.5;
   }
 
-  function increasePoints() {
+  function increasePoints(amt) {
     if (diver.isOutOfSub) {
-      points = points + 1;
+      points += amt;
     }
   }
 
@@ -253,6 +268,7 @@
     submarine.draw(ctx);
     diver.draw(ctx);
     particles.draw(ctx);
+    chests.forEach((chest, idx) => chest.draw(ctx));
 
     if (cursor.y > 100 && map_data[cursor.y][cursor.x]) {
       ctx.fillStyle = "purple";
@@ -274,6 +290,15 @@
       camera.update();
       particles.update();
       countDownSeconds();
+
+      chests.forEach((chest, idx) => {
+        chest.update();
+        if (circlesCollide(diver.cx, diver.cy, diver.h / 2, chest.x, chest.y, chest.r)) {
+          console.log("got it!!");
+          increasePoints(chest.loot);
+          chests.splice(idx, 1);
+        }
+      });
 
       //placeholder for colliding and reducing health
       if (keys["g"]) {
