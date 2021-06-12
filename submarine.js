@@ -8,6 +8,7 @@ class Submarine {
   w = 50;
   h = 50;
   speed = 5;
+  boost = 0;
 
   isGoingDown = true;
 
@@ -65,10 +66,10 @@ class Submarine {
 
     if (keys[" "]) {
       particles.explode(this.x, this.y, "pink");
-      // TODO: temporary boost in opposite dir to get unstuck
-      let boostDir = !this.isGoingDown;
-      this.isGoingDown = boostDir;
-      console.log(this.isGoingDown);
+      this.boost++;
+      if (this.boost >= 10) {
+        this.boost = 0;
+      }
     }
 
     // this.vy = this.isGoingDown ? 2 : -2;
@@ -85,7 +86,12 @@ class Submarine {
           this.y++;
         } else {
           //landed on something
-          this.vy = 0;
+          if (this.boost) {
+            this.y -= 1.3;
+            this.boost--;
+          } else {
+            this.vy = 0;
+          }
         }
       }
     } else if (this.vy < 0) {
