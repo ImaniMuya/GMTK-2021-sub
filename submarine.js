@@ -60,11 +60,9 @@ class Submarine {
 
     if (keys[" "]) {
       particles.explode(this.x, this.y, "pink");
-      this.isGoingDown = false;
     }
 
     // this.vy = this.isGoingDown ? 2 : -2;
-    console.log("idm ", this.isGoingDown);
     if (this.isGoingDown) {
       this.vy = 2;
     } else {
