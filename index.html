@@ -75,7 +75,6 @@
   var diveTimeRemaining;
   var oxygenTimer;
   var dead;
-  var howFarDown;
   var map_data;
   var isGoingDown = true;
   const TILES = {
@@ -106,10 +105,9 @@
     diveTimeRemaining = 10;
     oxygenTimer = setInterval(countDownSeconds, 1000);
     dead = false;
-    howFarDown = 10;
     submarine.reset(500, 50);
     diver.reset(500, 0);
-    playAudio();
+    // playAudio();
     tick();
   }
 
@@ -211,11 +209,11 @@
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "red";
-    ctx.fillText("Sub Lives Left: " + subLives, 30, 25 + howFarDown);
-    ctx.fillText("Dive Lives Left: " + diveLives, 30, 50 + howFarDown);
-    ctx.fillText("Treasure Points: " + points, 30, 75 + howFarDown);
-    ctx.fillText("Sub Time Remaining: " + subTimeRemaining, 500, 25 + howFarDown);
-    ctx.fillText("Dive Time Remaining: " + diveTimeRemaining, 500, 50 + howFarDown);
+    ctx.fillText("Sub Lives Left: " + subLives, 30, 25 - camera.y);
+    ctx.fillText("Dive Lives Left: " + diveLives, 30, 50 - camera.y);
+    ctx.fillText("Treasure Points: " + points, 30, 75 - camera.y);
+    ctx.fillText("Sub Time Remaining: " + subTimeRemaining, 500, 25 - camera.y);
+    ctx.fillText("Dive Time Remaining: " + diveTimeRemaining, 500, 50 - camera.y);
 
     submarine.draw(ctx);
     diver.draw(ctx);
@@ -235,7 +233,6 @@
   }
 
   function update() {
-    howFarDown = howFarDown + 1;
     submarine.update(keys);
     diver.update(keys);
     camera.update();
