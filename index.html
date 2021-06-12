@@ -96,7 +96,7 @@
     </div>
     <div id="score" class="hidden scoreCard">
       <h2>Your Score!</h2>
-      <div>Loot from your dive: <span id="treasureCount"></span>Coins</div>
+      <div>Loot from your dive: <span id="treasureCount"></span> Coins</div>
       <div>Dive time: <span id="diveTime"></span></div>
       <div>
         <button id="continueBtn" onclick="goToMenu()">Continue</button>
@@ -113,7 +113,7 @@
     </div>
     <div id="lossScreen" class="hidden goingUp">
       <h2>Uh Oh</h2>
-      <div>You ran out to time</div>
+      <div id="lossText">You ran out of time</div>
       <button id="lossBtn" onclick="goToMenu()">Back to Menu</button>
     </div>
     <div class="hidden goingUp" id="goingUp">
@@ -157,7 +157,6 @@
   const MAP_H = 2500;
   const keys = {};
   var subLives;
-  var diveLives;
   var hitGrace;
   var points;
   var subTimeRemaining;
@@ -222,7 +221,6 @@
     // RESET GAME HERE
     console.log("starting");
     subLives = 3;
-    diveLives = 3;
     hitGrace = 0;
     points = 0;
     subTimeRemaining = 60;
@@ -312,13 +310,15 @@
   function deathByTime() {
     if (subTimeRemaining <= 0 || diveTimeRemaining <= 0) {
       dead = true;
+      document.getElementById("lossText").innerHTML = "You ran out of time";
     }
   }
 
   //when you run out of lives
   function deathByBlows() {
-    if (subLives == 0 || diveLives == 0) {
+    if (subLives == 0) {
       dead = true;
+      document.getElementById("lossText").innerHTML = "You ran out of lives";
     }
   }
 
@@ -410,7 +410,7 @@
 
       //lose
       if (dead){
-        playAudio("deathTune", true);
+        if (diver.isOutOfSub || subLives == 0) {playAudio("deathTune", true);}
         console.log("YOU DIED");
         done = true;
         lossScreen.classList.remove("hidden");

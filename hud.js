@@ -10,7 +10,6 @@ class HUD {
     ctx.fillRect(0, 1 - camera.y, 1000, 100);
     ctx.fillStyle = "white";
     ctx.fillText("Sub Lives Left: " + subLives, 30, 25 - camera.y);
-    ctx.fillText("Dive Lives Left: " + diveLives, 30, 50 - camera.y);
     ctx.fillText("Treasure Points: " + points, 30, 75 - camera.y);
     if (subTimeRemaining.toFixed(0) <= 60) ctx.fillStyle = "green";
     if (subTimeRemaining.toFixed(0) <= 30 && subTimeRemaining.toFixed(0) > 10) ctx.fillStyle = "orange";
