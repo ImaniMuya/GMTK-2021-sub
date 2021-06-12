@@ -5,18 +5,28 @@ class Submarine {
   vx = 0;
   vy = 0;
 
-  w = 200;
-  h = 200;
+  w = 50;
+  h = 50;
   speed = 5;
+
+  get cx() {
+    return this.x + this.w / 2;
+  }
+  get cy() {
+    return this.y + this.h / 2;
+  }
 
   update(keys) {
     this.vx = 0;
+    if (diver.isOutOfSub) {
+      return;
+    }
 
     if (keys["a"]) this.vx = -this.speed;
     if (keys["d"]) this.vx = +this.speed;
 
     if (keys[" "]) {
-      particles.explode(this.x, this.y, "blue");
+      particles.explode(this.x, this.y, "pink");
     }
 
     this.x += this.vx;
