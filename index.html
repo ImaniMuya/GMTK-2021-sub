@@ -83,7 +83,7 @@
         <option value="2">Hard</option>
       </select>
       <button id="menuBtn" onclick="goToMenu()">Back</button>
-    </div>    
+    </div>
     <div class="hidden goingUp" id="goingUp">
       <h2>Going Up?</h2>
       <div class="btn-group">
@@ -156,11 +156,11 @@
     new Treasure(705, 2438, 10),
   ];
 
-  function goToSettings(){
+  function goToSettings() {
     startScreen.classList.add("hidden");
     settingsScreen.classList.remove("hidden");
   }
-  function goToMenu(){
+  function goToMenu() {
     startScreen.classList.remove("hidden");
     settingsScreen.classList.add("hidden");
     canvas.classList.add("hidden");
@@ -183,16 +183,16 @@
     submarine.reset(500, 50);
     diver.reset(500, 0);
     submarine.isGoingDown = true;
-    camera.x = 0
-    camera.y = 0
+    camera.x = 0;
+    camera.y = 0;
     // playAudio();
     paused = false;
     tick();
   }
 
-  function updateDifficulty(){
+  function updateDifficulty() {
     var chosenDifficultyLevel = document.getElementById("difficulty");
-    difficultyLevel = chosenDifficultyLevel.options[chosenDifficultyLevel.selectedIndex].value;     
+    difficultyLevel = chosenDifficultyLevel.options[chosenDifficultyLevel.selectedIndex].value;
   }
 
   function playAudio() {
@@ -250,11 +250,11 @@
 
   function reduceHealth() {
     if (hitGrace == 0 && submarine.takingDamage) {
-        subLives = subLives - difficultyLevel;
-        hitGrace = hitGrace + 0.5;
-        var hitTimer = setTimeout(updateHitGrace, 1000);
-        deathByBlows();
-      }
+      subLives = subLives - difficultyLevel;
+      hitGrace = hitGrace + 0.5;
+      var hitTimer = setTimeout(updateHitGrace, 1000);
+      deathByBlows();
+    }
   }
 
   //determine how soon health can be reduced again
@@ -334,9 +334,9 @@
         goToMenu();
       }
       //trigger switch prompt
-      if (keys["w"] && submarine.isGoingDown) {
+      if (keys["q"] && submarine.isGoingDown) {
         switchDirectionsPrompt();
-        keys["w"] = false;
+        keys["q"] = false;
       }
     }
   }
