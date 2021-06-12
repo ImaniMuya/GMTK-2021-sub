@@ -101,7 +101,12 @@ class Submarine {
         if (x_cls == null) {
           this.y--;
         } else {
-          this.vy = 0;
+          if (this.boost) {
+            this.y += 1.3;
+            this.boost--;
+          } else {
+            this.vy = 0;
+          }
         }
       }
     }
