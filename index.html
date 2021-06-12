@@ -78,9 +78,9 @@
   var points;
   var subTimeRemaining;
   var diveTimeRemaining;
-  var oxygenTimer;
   var dead;
   var map_data;
+  var paused;
   // var isGoingDown = true;
   const TILES = {
     "255,174,201,255": null,
@@ -107,18 +107,14 @@
     points = 0;
     subTimeRemaining = 60;
     diveTimeRemaining = 10;
-    oxygenTimer = setInterval(countDownSeconds, 1000);
     dead = false;
     submarine.reset(500, 50);
     diver.reset(500, 0);
     submarine.isGoingDown = true;
     // playAudio();
+    paused = false;
     tick();
   }
-
-  menuAudio = document.getElementById("menuTune");
-  menuAudio.currentTime = 12;
-  menuAudio.play();
 
   function playAudio() {
     var audio = document.getElementById("menuTune");
@@ -148,9 +144,9 @@
 
   // reduce the time
   function countDownSeconds() {
-    subTimeRemaining = subTimeRemaining - 1;
+    subTimeRemaining = subTimeRemaining - 1/60;
     if (diver.isOutOfSub == true) {
-      diveTimeRemaining = diveTimeRemaining - 1;
+      diveTimeRemaining = diveTimeRemaining - 1/60;
     } else {
       diveTimeRemaining = 10;
     }
@@ -161,7 +157,6 @@
   function deathByTime() {
     if (subTimeRemaining == 0 || diveTimeRemaining == 0) {
       console.log("YOU DIED");
-      window.clearInterval(oxygenTimer);
       dead = true;
     }
   }
@@ -170,7 +165,6 @@
   function deathByBlows() {
     if (subLives == 0 || diveLives == 0) {
       console.log("YOU DIED");
-      window.clearInterval(oxygenTimer);
       dead = true;
     }
   }
@@ -217,8 +211,8 @@
     ctx.fillText("Sub Lives Left: " + subLives, 30, 25 - camera.y);
     ctx.fillText("Dive Lives Left: " + diveLives, 30, 50 - camera.y);
     ctx.fillText("Treasure Points: " + points, 30, 75 - camera.y);
-    ctx.fillText("Sub Time Remaining: " + subTimeRemaining, 500, 25 - camera.y);
-    ctx.fillText("Dive Time Remaining: " + diveTimeRemaining, 500, 50 - camera.y);
+    ctx.fillText("Sub Time Remaining: " + subTimeRemaining.toFixed(0), 500, 25 - camera.y);
+    ctx.fillText("Dive Time Remaining: " + diveTimeRemaining.toFixed(0), 500, 50 - camera.y);
 
     submarine.draw(ctx);
     diver.draw(ctx);
@@ -238,42 +232,48 @@
   }
 
   function update() {
-    submarine.update(keys);
-    diver.update(keys);
-    camera.update();
-    particles.update();
+    if (!paused){
+      submarine.update(keys);
+      diver.update(keys);
+      camera.update();
+      particles.update();
+      countDownSeconds()
 
-    //placeholder for colliding and reducing health
-    if (keys["g"]) {
-      reduceHealth();
-    }
-    //placeholder for collecting treasure
-    if (keys["c"]) {
-      increasePoints();
-    }
-    // end game
-    if (keys["Escape"] || dead || submarine.y == 0) {
-      done = true;
-      canvas.classList.add("hidden");
-      startScreen.classList.remove("hidden");
-    }
-    //trigger switch prompt
-    if (keys["w"] && submarine.isGoingDown) {
-      switchDirectionsPrompt();
-      keys["w"] = false;
+      //placeholder for colliding and reducing health
+      if (keys["g"]) {
+        reduceHealth();
+      }
+      //placeholder for collecting treasure
+      if (keys["c"]) {
+        increasePoints();
+      }
+      // end game
+      if (keys["Escape"] || dead || submarine.y <= 0) {
+        done = true;
+        canvas.classList.add("hidden");
+        startScreen.classList.remove("hidden");
+      }
+      //trigger switch prompt
+      if (keys["w"] && submarine.isGoingDown) {
+        switchDirectionsPrompt();
+        keys["w"] = false;
+      }
     }
   }
 
   function switchDirectionsPrompt() {
     goingUp.classList.remove("hidden");
+    paused = true;
   }
   function goUp(){
     submarine.isGoingDown = false;
     goingUp.classList.add("hidden");
+    paused = false;
   }
   function goDown(){
     submarine.isGoingDown = true;
     goingUp.classList.add("hidden");
+    paused = false;
   }
 
   function circlesCollide(x1, y1, r1, x2, y2, r2) {
@@ -281,7 +281,6 @@
     const dy = y1 - y2;
     const dsq = dx * dx + dy * dy;
     const rsq = (r1 + r2) * (r1 + r2);
-
     return dsq < rsq;
   }
 
