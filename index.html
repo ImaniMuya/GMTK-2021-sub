@@ -41,6 +41,19 @@
       height: 100vmin;
       background-color: rgb(255, 192, 203);
     }
+    .scoreCard {
+      color: white;
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      left: 0;
+      right: 0;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 20px;
+      width: 500px;
+      background-color: pink;
+    }
     .goingUp {
       position: absolute;
       display: block;
@@ -80,6 +93,14 @@
       <button id="level2" value="2" onclick="startGame(2)">Level2</button>
       <button id="level3" value="3" onclick="startGame(3)">Level3</button>
       <button id="settingsBtn" onclick="goToSettings()">Settings</button>
+    </div>
+    <div id="score" class="scoreCard">
+      <h2>Your Score!</h2>
+      <div>Loot from your dive: <span id="treasureCount"></span></div>
+      <div>Dive time: <span id="diveTime"></span></div>
+      <div>
+        <button id="playBtn" onclick="goToMenu()">Continue</button>
+      </div>
     </div>
     <div id="settingsScreen" class="hidden">
       <select id="difficulty">
@@ -141,6 +162,7 @@
     "0,0,0,255": 1,
   };
   let done = false;
+  let win = false;
 
   // inits
   let submarine = new Submarine();
@@ -158,7 +180,18 @@
     startScreen.classList.add("hidden");
     menu.classList.remove("hidden");
     settingsScreen.classList.add("hidden");
+    score.classList.add("hidden");
     canvas.classList.add("hidden");
+  }
+  function showScore() {
+    score.classList.remove("hidden");
+    startScreen.classList.add("hidden");
+    menu.classList.add("hidden");
+    settingsScreen.classList.add("hidden");
+    canvas.classList.add("hidden");
+    // tally
+    treasureCount.innerText = points;
+    diveTime.innerText = subTimeRemaining;
   }
 
   function startGame(lvl) {
@@ -312,10 +345,18 @@
         increasePoints();
       }
       // end game
-      if (keys["Escape"] || dead || submarine.y <= 0) {
+      if (keys["Escape"] || dead) {
         done = true;
         goToMenu();
       }
+
+      // win
+      if (submarine.y <= 0 && subTimeRemaining > 0) {
+        win = true;
+        done = true;
+        showScore();
+      }
+
       //trigger switch prompt
       if (keys["q"] && submarine.isGoingDown) {
         switchDirectionsPrompt();
