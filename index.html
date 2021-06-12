@@ -43,6 +43,7 @@
 <!-- Scripts -->
 <script src="camera.js"></script>
 <script src="particles.js"></script>
+<script src="diver.js"></script>
 <script src="submarine.js"></script>
 <script>
   const canvas = document.getElementById("canvas");
@@ -67,6 +68,7 @@
 
   // inits
   let submarine = new Submarine();
+  let diver = new Diver();
   let camera = new Camera();
   let particles = new Particles();
 
@@ -80,6 +82,7 @@
     ctx.translate(camera.x, camera.y);
 
     submarine.draw(ctx);
+    diver.draw(ctx);
     particles.draw(ctx);
 
     ctx.restore();
@@ -87,8 +90,22 @@
 
   function update() {
     submarine.update(keys);
+    diver.update(keys);
     camera.update();
     particles.update();
+
+    // leave sub
+    if (keys["e"]) {
+      if (!diver.isOutOfSub) {
+        diver.isOutOfSub = true;
+        diver.y = diver.y + 60;
+      }
+    }
+    // reenters sub
+    if (keys["r"] && circlesCollide(submarine.cx, submarine.cy, submarine.h / 2, diver.x, diver.y, diver.h / 2)) {
+      console.log("re-enter sub");
+      diver.isOutOfSub = false;
+    }
     // end game
     if (keys["Escape"]) {
       done = true;
@@ -97,8 +114,17 @@
     }
   }
 
+  function circlesCollide(x1, y1, r1, x2, y2, r2) {
+    const dx = x1 - x2;
+    const dy = y1 - y2;
+    const dsq = dx * dx + dy * dy;
+    const rsq = (r1 + r2) * (r1 + r2);
+
+    return dsq < rsq;
+  }
+
   window.onkeydown = function (event) {
-    console.log(event);
+    // console.log(event);
     const k = event.key;
     keys[k] = true;
   };
