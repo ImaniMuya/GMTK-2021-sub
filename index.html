@@ -48,8 +48,7 @@
     <!-- assets -->
     <img src="./assets/filler-underwater-background.jpg" id="backgroundpic" hidden />
     <img src="./assets/lvl1.png" id="c_map" onload="imageLoaded()" hidden />
-    
-    <audio id="menuTune" preload="auto" src="./tunes/menu_concept_1.mp3" type="audio/mpeg">Your browser does not support the audio element</audio>
+    <audio id="menuTune" preload="auto" src="./assets/menu_concept_1.mp3" type="audio/mpeg">Your browser does not support the audio element</audio>
   </body>
 </html>
 
@@ -78,6 +77,7 @@
   var dead;
   var howFarDown;
   var map_data;
+  var isGoingDown = true;
   const TILES = {
     "255,174,201,255": null,
     "255,255,255,255": 0,
@@ -109,19 +109,19 @@
     howFarDown = 10;
     submarine.reset(500, 50);
     diver.reset(500, 0);
-    playAudio()
+    playAudio();
     tick();
   }
 
-  menuAudio=document.getElementById('menuTune');
+  menuAudio = document.getElementById("menuTune");
   menuAudio.currentTime = 12;
   menuAudio.play();
 
-  function playAudio(){
-	var audio= document.getElementById("menuTune");
-	audio.currentTime=0;
-	audio.play();	
-	}
+  function playAudio() {
+    var audio = document.getElementById("menuTune");
+    audio.currentTime = 0;
+    audio.play();
+  }
 
   function initMap() {
     if (loadedImgs == 1) {
@@ -206,6 +206,7 @@
     ctx.translate(camera.x, camera.y);
     ctx.drawImage(c_map, 0, 0, SIZE, MAP_H);
 
+    // HUD
     ctx.font = "italic 18px Arial";
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
@@ -254,6 +255,18 @@
       done = true;
       canvas.classList.add("hidden");
       startScreen.classList.remove("hidden");
+    }
+  }
+
+  function switchDirectionsPrompt() {
+    const confirmAction = window.confirm("Going up?");
+    console.log("propmt created");
+    if (confirmAction) {
+      isGoingDown = false;
+      console.log("up");
+    } else {
+      console.log("no");
+      // return;
     }
   }
 

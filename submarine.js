@@ -9,6 +9,8 @@ class Submarine {
   h = 50;
   speed = 5;
 
+  isGoingDown = true;
+
   get cx() {
     return this.x + this.w / 2;
   }
@@ -58,9 +60,10 @@ class Submarine {
 
     if (keys[" "]) {
       particles.explode(this.x, this.y, "pink");
+      isGoingDown = false;
     }
 
-    this.vy = 2;
+    this.vy = isGoingDown ? 2 : -2;
     if (this.vy > 0) {
       //moving down
       for (let i = 0; i < this.vy; i++) {
@@ -75,12 +78,12 @@ class Submarine {
     } else if (this.vy < 0) {
       //moving up
       for (let i = 0; i > this.vy; i--) {
-        // let x_cls = getCollisionUp(this.y, this.x, this.w);
-        // if (x_cls == null) {
-        //   this.y--;
-        // } else {
-        //   this.vy = 0;
-        // }
+        let x_cls = getCollisionUp(this.y, this.x, this.w);
+        if (x_cls == null) {
+          this.y--;
+        } else {
+          this.vy = 0;
+        }
       }
     }
   }
