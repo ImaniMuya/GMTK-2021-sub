@@ -11,6 +11,9 @@ class Camera {
     if (this.y < -2500 + this.h && submarine.isGoingDown) {
       return;
     }
+    if (this.y >= 0 && !submarine.isGoingDown) {
+      return;
+    }
     this.x = 0;
     if (submarine.isGoingDown) {
       this.y -= 1;
