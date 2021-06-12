@@ -94,9 +94,9 @@
       <button id="level3" value="3" onclick="startGame(3)">Level3</button>
       <button id="settingsBtn" onclick="goToSettings()">Settings</button>
     </div>
-    <div id="score" class="scoreCard">
+    <div id="score" class="hidden scoreCard">
       <h2>Your Score!</h2>
-      <div>Loot from your dive: <span id="treasureCount"></span></div>
+      <div>Loot from your dive: <span id="treasureCount"></span>Coins</div>
       <div>Dive time: <span id="diveTime"></span></div>
       <div>
         <button id="playBtn" onclick="goToMenu()">Continue</button>
@@ -201,7 +201,7 @@
     playAudio("menuTune");
     // tally
     treasureCount.innerText = points;
-    diveTime.innerText = subTimeRemaining;
+    diveTime.innerText = 60 - Math.floor(subTimeRemaining);
   }
 
   function startGame(lvl) {
