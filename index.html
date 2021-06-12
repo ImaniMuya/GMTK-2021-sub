@@ -97,7 +97,7 @@
     <div id="score" class="hidden scoreCard">
       <h2>Your Score!</h2>
       <div>Loot from your dive: <span id="treasureCount"></span>Coins</div>
-      <div>Dive time: <span id="diveTime"></span></div>
+      <div>Dive time: <span id="diveTime"></span>Seconds</div>
       <div>
         <button id="continueBtn" onclick="goToMenu()">Continue</button>
       </div>
@@ -113,7 +113,7 @@
     </div>
     <div id="lossScreen" class="hidden goingUp">
       <h2>Uh Oh</h2>
-      <div>You ran out to time</div>
+      <div id="lossMsg"></div>
       <button id="lossBtn" onclick="goToMenu()">Back to Menu</button>
     </div>
     <div class="hidden goingUp" id="goingUp">
@@ -244,25 +244,29 @@
   }
 
   function playAudio(track, startOver) {
-    if (!paused){
-      console.log("playing again")
+    if (!paused) {
+      console.log("playing again");
       if (audioOn && playingAudio != track) {
-        if (playingAudio) {pauseAudio(playingAudio)}
+        if (playingAudio) {
+          pauseAudio(playingAudio);
+        }
         var audio = document.getElementById(track);
-        if (startOver) {audio.currentTime = 0;}
+        if (startOver) {
+          audio.currentTime = 0;
+        }
         audio.play();
-        playingAudio = track
+        playingAudio = track;
       }
     }
   }
 
   function pauseAudio(track) {
-      console.log("inside pause:", track)
-      var audio = document.getElementById(track);
-      console.log("html element:", audio)
-      audio.pause();
-      playingAudio = ""
-      pausedAudio = track
+    console.log("inside pause:", track);
+    var audio = document.getElementById(track);
+    console.log("html element:", audio);
+    audio.pause();
+    playingAudio = "";
+    pausedAudio = track;
   }
 
   function toggleAudio() {
@@ -276,7 +280,7 @@
       audioOnBtn.value = "On";
       audioOnBtn.innerText = "Volume On";
       audioOn = true;
-      playAudio(pausedAudio, false)
+      playAudio(pausedAudio, false);
     }
   }
 
@@ -317,6 +321,7 @@
       console.log("YOU DIED");
       done = true;
       lossScreen.classList.remove("hidden");
+      lossMsg.innerText = "You ran out of time";
     }
   }
 
@@ -376,53 +381,53 @@
     particles.update();
     countDownSeconds();
     reduceHealth();
-    if (diver.isOutOfSub){
-      playAudio("diveTune", true)
-    }else{
-      console.log("spiting you")
-      playAudio("subTune", false)
+    if (diver.isOutOfSub) {
+      playAudio("diveTune", true);
+    } else {
+      console.log("spiting you");
+      playAudio("subTune", false);
     }
 
-      chests.forEach((chest, idx) => {
-        chest.update();
-        if (diver.isOutOfSub && circlesCollide(diver.cx, diver.cy, diver.h / 2, chest.x, chest.y, chest.r)) {
-          console.log("got it!!");
-          increasePoints(chest.loot);
-          chests.splice(idx, 1);
-        }
-      });
+    chests.forEach((chest, idx) => {
+      chest.update();
+      if (diver.isOutOfSub && circlesCollide(diver.cx, diver.cy, diver.h / 2, chest.x, chest.y, chest.r)) {
+        console.log("got it!!");
+        increasePoints(chest.loot);
+        chests.splice(idx, 1);
+      }
+    });
 
-      //placeholder for colliding and reducing health
-      if (keys["g"]) {
-        reduceHealth();
-      }
-      //placeholder for collecting treasure
-      if (keys["c"]) {
-        increasePoints();
-      }
-      // end game
-      if (keys["Escape"]) {
-        done = true;
-        goToMenu();
-      }
+    //placeholder for colliding and reducing health
+    if (keys["g"]) {
+      reduceHealth();
+    }
+    //placeholder for collecting treasure
+    if (keys["c"]) {
+      increasePoints();
+    }
+    // end game
+    if (keys["Escape"]) {
+      done = true;
+      goToMenu();
+    }
 
-      // win
-      if (submarine.y <= 0 && subTimeRemaining > 0) {
-        win = true;
-        done = true;
-        showScore();
-      }
+    // win
+    if (submarine.y <= 0 && subTimeRemaining > 0) {
+      win = true;
+      done = true;
+      showScore();
+    }
 
-      //trigger switch prompt
-      if (keys["q"] && submarine.isGoingDown) {
-        switchDirectionsPrompt();
-        keys["q"] = false;
-      }
-    };
+    //trigger switch prompt
+    if (keys["q"] && submarine.isGoingDown) {
+      switchDirectionsPrompt();
+      keys["q"] = false;
+    }
+  }
 
   function switchDirectionsPrompt() {
     paused = true;
-    console.log("hit the bottom:", playingAudio)
+    console.log("hit the bottom:", playingAudio);
     pauseAudio(playingAudio);
     goingUp.classList.remove("hidden");
   }
