@@ -29,6 +29,18 @@ class Submarine {
     if (this.y > 2416 && this.isGoingDown) {
       switchDirectionsPrompt();
     }
+    // check if off camera
+    console.log("cam: ", camera.y, " y: ", this.y);
+    if (this.isGoingDown && this.y <= Math.abs(camera.y) - this.h) {
+      done = true;
+      lossScreen.classList.remove("hidden");
+      lossMsg.innerText = "You were too slow";
+    }
+    // if (!this.isGoingDown && this.y <= Math.abs(camera.y) + this.h) {
+    //   console.log("to far!");
+    //   done = true;
+    //   lossScreen.classList.remove("hidden");
+    // }
 
     if (keys["a"]) {
       this.vx = -this.speed;

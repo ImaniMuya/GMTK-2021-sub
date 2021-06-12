@@ -97,7 +97,7 @@
     <div id="score" class="hidden scoreCard">
       <h2>Your Score!</h2>
       <div>Loot from your dive: <span id="treasureCount"></span> Coins</div>
-      <div>Dive time: <span id="diveTime"></span></div>
+      <div>Dive time: <span id="diveTime"></span> Seconds</div>
       <div>
         <button id="continueBtn" onclick="goToMenu()">Continue</button>
       </div>
@@ -113,7 +113,7 @@
     </div>
     <div id="lossScreen" class="hidden goingUp">
       <h2>Uh Oh</h2>
-      <div id="lossText">You ran out of time</div>
+      <div id="lossMsg"></div>
       <button id="lossBtn" onclick="goToMenu()">Back to Menu</button>
     </div>
     <div class="hidden goingUp" id="goingUp">
@@ -130,7 +130,9 @@
     <!-- assets -->
     <img src="./assets/filler-underwater-background.jpg" id="backgroundpic" hidden />
     <img src="./assets/lvl1.png" id="c_map" onload="imageLoaded()" hidden />
-    <audio id="menuTune" preload="auto" src="./assets/menu v3.mp3" type="audio/mpeg" loop=true>Your browser does not support the audio element</audio>
+    <audio id="menuTune" preload="auto" src="./assets/menu v3.mp3" type="audio/mpeg" loop="true">
+      Your browser does not support the audio element
+    </audio>
     <audio id="subTune" preload="auto" src="./assets/in-sub v2.mp3" type="audio/mpeg"></audio>
     <audio id="diveTune" preload="auto" src="./assets/diver v2.mp3" type="audio/mpeg"></audio>
     <audio id="deathTune" preload="auto" src="./assets/drown sfx v2.mp3" type="audio/mpeg"></audio>
@@ -243,21 +245,26 @@
   }
 
   function playAudio(track, startOver) {
-    if(track == "treasureTune"){document.getElementById(track).play()}
-    else if (audioOn && playingAudio != track) {
-      if (playingAudio) {pauseAudio(playingAudio)}
+    if (track == "treasureTune") {
+      document.getElementById(track).play();
+    } else if (audioOn && playingAudio != track) {
+      if (playingAudio) {
+        pauseAudio(playingAudio);
+      }
       var audio = document.getElementById(track);
-      if (startOver) {audio.currentTime = 0;}
+      if (startOver) {
+        audio.currentTime = 0;
+      }
       audio.play();
-      playingAudio = track
+      playingAudio = track;
     }
   }
 
   function pauseAudio(track) {
     var audio = document.getElementById(track);
     audio.pause();
-    playingAudio = ""
-    pausedAudio = track
+    playingAudio = "";
+    pausedAudio = track;
   }
 
   function toggleAudio() {
@@ -271,7 +278,7 @@
       audioOnBtn.value = "On";
       audioOnBtn.innerText = "Volume On";
       audioOn = true;
-      playAudio(pausedAudio, true)
+      playAudio(pausedAudio, true);
     }
   }
 
@@ -309,8 +316,11 @@
   // when you run out of time
   function deathByTime() {
     if (subTimeRemaining <= 0 || diveTimeRemaining <= 0) {
+      console.log("YOU DIED");
+      done = true;
+      lossScreen.classList.remove("hidden");
+      lossMsg.innerText = "You ran out of time";
       dead = true;
-      document.getElementById("lossText").innerHTML = "You ran out of time";
     }
   }
 
@@ -318,7 +328,6 @@
   function deathByBlows() {
     if (subLives == 0) {
       dead = true;
-      document.getElementById("lossText").innerHTML = "You ran out of lives";
     }
   }
 
@@ -371,57 +380,56 @@
     particles.update();
     countDownSeconds();
     reduceHealth();
-    if (diver.isOutOfSub){
-      playAudio("diveTune", true)
-    }else{
-      playAudio("subTune", false)
+    if (diver.isOutOfSub) {
+      playAudio("diveTune", true);
+    } else {
+      console.log("spiting you");
+      playAudio("subTune", false);
     }
 
-      chests.forEach((chest, idx) => {
-        chest.update();
-        if (diver.isOutOfSub && circlesCollide(diver.cx, diver.cy, diver.h / 2, chest.x, chest.y, chest.r)) {
-          console.log("got it!!");
-          increasePoints(chest.loot);
-          chests.splice(idx, 1);
-          playAudio("treasureTune", false)
-        }
-      });
+    chests.forEach((chest, idx) => {
+      chest.update();
+      if (diver.isOutOfSub && circlesCollide(diver.cx, diver.cy, diver.h / 2, chest.x, chest.y, chest.r)) {
+        console.log("got it!!");
+        increasePoints(chest.loot);
+        chests.splice(idx, 1);
+      }
+    });
 
-      //placeholder for colliding and reducing health
-      if (keys["g"]) {
-        reduceHealth();
-      }
-      //placeholder for collecting treasure
-      if (keys["c"]) {
-        increasePoints();
-      }
-      // end game
-      if (keys["Escape"]) {
-        done = true;
-        goToMenu();
-      }
+    //placeholder for colliding and reducing health
+    if (keys["g"]) {
+      reduceHealth();
+    }
+    //placeholder for collecting treasure
+    if (keys["c"]) {
+      increasePoints();
+    }
+    // end game
+    if (keys["Escape"]) {
+      done = true;
+      goToMenu();
+    }
 
-      // win
-      if (submarine.y <= 0 && subTimeRemaining > 0) {
-        win = true;
-        done = true;
-        showScore();
-      }
+    // win
+    if (submarine.y <= 0 && subTimeRemaining > 0) {
+      win = true;
+      done = true;
+      showScore();
+    }
 
-      //lose
-      if (dead){
-        if (diver.isOutOfSub || subLives == 0) {playAudio("deathTune", true);}
-        console.log("YOU DIED");
-        done = true;
-        lossScreen.classList.remove("hidden");
-      }
-
-      //trigger switch prompt
-      if (keys["q"] && submarine.isGoingDown) {
-        switchDirectionsPrompt();
-        keys["q"] = false;
-      }
-    };
+    //trigger switch prompt
+    if (keys["q"] && submarine.isGoingDown) {
+      switchDirectionsPrompt();
+      keys["q"] = false;
+    }
+    //lose
+    if (dead) {
+      if (diver.isOutOfSub || subLives == 0) {playAudio("deathTune", true);}
+      console.log("YOU DIED");
+      done = true;
+      lossScreen.classList.remove("hidden");
+    }
+  }
 
   function switchDirectionsPrompt() {
     paused = true;
