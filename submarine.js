@@ -29,6 +29,11 @@ class Submarine {
     if (keys["d"]) {
       this.vx = +this.speed;
     }
+    // Allowed one switch per level
+    if (keys["w"]) {
+      // TODO: prompt switch, are you sure?
+      this.isGoingDown = false;
+    }
 
     let vx = Math.round(this.vx);
     let bottom = this.y + this.h;
@@ -60,11 +65,13 @@ class Submarine {
 
     if (keys[" "]) {
       particles.explode(this.x, this.y, "pink");
-      this.isGoingDown = false;
+      // TODO: temporary boost in opposite dir to get unstuck
+      let boostDir = !this.isGoingDown;
+      this.isGoingDown = boostDir;
+      console.log(this.isGoingDown);
     }
 
     // this.vy = this.isGoingDown ? 2 : -2;
-    console.log("idm ", this.isGoingDown);
     if (this.isGoingDown) {
       this.vy = 2;
     } else {
