@@ -104,6 +104,7 @@
 
 <!-- Scripts -->
 <script src="camera.js"></script>
+<script src="hud.js"></script>
 <script src="particles.js"></script>
 <script src="collisionMap.js"></script>
 <script src="levels.js"></script>
@@ -140,9 +141,9 @@
   let submarine = new Submarine();
   let diver = new Diver();
   let camera = new Camera();
+  let hud = new HUD();
   let particles = new Particles();
   // level 1 chests
-  // let chests = [new Treasure(500, 500, 10), new Treasure(500, 100, 1)];
   let chests = getLvl1Chests();
   function goToSettings() {
     startScreen.classList.add("hidden");
@@ -266,28 +267,13 @@
     ctx.translate(camera.x, camera.y);
     ctx.drawImage(c_map, 0, 0, SIZE, MAP_H);
 
-    // HUD
-    ctx.font = "italic 18px Arial";
-    ctx.textAlign = "left";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = "red";
-    ctx.fillText("Sub Lives Left: " + subLives, 30, 25 - camera.y);
-    ctx.fillText("Dive Lives Left: " + diveLives, 30, 50 - camera.y);
-    ctx.fillText("Treasure Points: " + points, 30, 75 - camera.y);
-    ctx.fillText("Sub Time Remaining: " + subTimeRemaining.toFixed(0), 500, 25 - camera.y);
-    ctx.fillText("Dive Time Remaining: " + diveTimeRemaining.toFixed(0), 500, 50 - camera.y);
-
     submarine.draw(ctx);
     diver.draw(ctx);
     particles.draw(ctx);
     chests.forEach((chest, idx) => chest.draw(ctx));
-
-    ctx.fillRect(cursor.x, cursor.y, 10, 10);
+    hud.draw(ctx);
 
     ctx.restore();
-
-    ctx.fillText(submarine.vy, 10, 100);
-    ctx.fillText(submarine.y, 10, 150);
   }
 
   function update() {
