@@ -38,9 +38,11 @@
     <canvas id="canvas" class="hidden" width="1000" height="1000">Your browser doesn't support html5 canvas!</canvas>
     <!-- assets -->
     <img src="./assets/filler-underwater-background.jpg" id="backgroundpic" hidden />
+    <img src="./assets/examplemap.png" id="cmapImg0" hidden />
   </body>
 </html>
 <!-- Scripts -->
+<script src="collisionMap.js"></script>
 <script src="camera.js"></script>
 <script src="particles.js"></script>
 <script src="diver.js"></script>
@@ -52,6 +54,7 @@
     canvas.classList.remove("hidden");
     startScreen.classList.add("hidden");
     done = false;
+    // RESET GAME HERE
     tick();
   }
   function tick() {
@@ -81,17 +84,18 @@
   // reduce the time
   function countDownSeconds() {
     subTimeRemaining = subTimeRemaining - 1;
-    if (diver.isOutOfSub == true){
+    if (diver.isOutOfSub == true) {
       diveTimeRemaining = diveTimeRemaining - 1;
+    } else {
+      diveTimeRemaining = 10;
     }
-    else {diveTimeRemaining = 10}
-    deathByTime()
+    deathByTime();
   }
 
   // when you run out of time
   function deathByTime() {
     if (subTimeRemaining == 0 || diveTimeRemaining == 0) {
-      console.log('YOU DIED');
+      console.log("YOU DIED");
       window.clearInterval(timer);
       dead = true;
     }
@@ -105,14 +109,14 @@
     // ctx.drawImage(backgroundpic, 0, cameraBase, SIZE, SIZE);
     // ctx.drawImage(backgroundpic, 0, cameraBase + SIZE, SIZE, SIZE);
     // ctx.translate(camera.x, camera.y);
-    ctx.font = 'italic 18px Arial';
-    ctx.textAlign = 'left';
-    ctx. textBaseline = 'middle';
-    ctx.fillStyle = 'red';
-    ctx.fillText('Lives Left: ' + lives, 30, 25);
-    ctx.fillText('Treasure Points: ' + points, 30, 50)
-    ctx.fillText('Sub Time Remaining: ' + subTimeRemaining, 500, 25)
-    ctx.fillText('Dive Time Remaining: ' + diveTimeRemaining, 500, 50)
+    ctx.font = "italic 18px Arial";
+    ctx.textAlign = "left";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "red";
+    ctx.fillText("Lives Left: " + lives, 30, 25);
+    ctx.fillText("Treasure Points: " + points, 30, 50);
+    ctx.fillText("Sub Time Remaining: " + subTimeRemaining, 500, 25);
+    ctx.fillText("Dive Time Remaining: " + diveTimeRemaining, 500, 50);
 
     submarine.draw(ctx);
     diver.draw(ctx);
