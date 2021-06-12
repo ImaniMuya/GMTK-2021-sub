@@ -142,7 +142,8 @@
   var playingAudio;
   var pausedAudio;
   var audioOn = true;
-  var track = "menuTune"
+  var track = "menuTune";
+  var startOver = true;
   var difficultyLevel;
   const TILES = {
     "255,174,201,255": null,
@@ -168,7 +169,7 @@
     menu.classList.remove("hidden");
     settingsScreen.classList.add("hidden");
     canvas.classList.add("hidden");
-    playAudio("menuTune");
+    playAudio("menuTune", true);
   }
 
   function startGame(lvl) {
@@ -193,7 +194,7 @@
     camera.x = 0;
     camera.y = 0;
     chests = getChests(lvl);
-    playAudio("subTune");
+    playAudio("subTune", true);
     paused = false;
     tick();
   }
@@ -203,18 +204,18 @@
     difficultyLevel = chosenDifficultyLevel.options[chosenDifficultyLevel.selectedIndex].value;
   }
 
-  function playAudio(track) {
+  function playAudio(track, startOver) {
     if (audioOn && playingAudio != track) {
       if (playingAudio) {pauseAudio(playingAudio)}
       var audio = document.getElementById(track);
-      audio.currentTime = 0;
+      if (startOver) {audio.currentTime = 0;}
       audio.play();
       playingAudio = track
     }
-    console.log("current audio:", playingAudio)
   }
 
   function pauseAudio(track) {
+      console.log("inside pause:", track)
       var audio = document.getElementById(track);
       audio.pause(track);
       playingAudio = ""
@@ -232,7 +233,7 @@
       audioOnBtn.value= "On";
       audioOnBtn.innerText = "Volume On";
       audioOn = true;
-      playAudio(pausedAudio)
+      playAudio(pausedAudio, false)
     }
   }
 
@@ -330,6 +331,11 @@
       particles.update();
       countDownSeconds();
       reduceHealth();
+      if (diver.isOutOfSub){
+        playAudio("diveTune", true)
+      }else{
+        playAudio("subTune", false)
+      }
 
       chests.forEach((chest, idx) => {
         chest.update();
@@ -362,6 +368,8 @@
   }
 
   function switchDirectionsPrompt() {
+    console.log("hit the bottom:", playingAudio)
+    pauseAudio(playingAudio);
     goingUp.classList.remove("hidden");
     paused = true;
   }
@@ -369,11 +377,13 @@
     submarine.isGoingDown = false;
     goingUp.classList.add("hidden");
     paused = false;
+    playAudio(pausedAudio, false);
   }
   function goDown() {
     submarine.isGoingDown = true;
     goingUp.classList.add("hidden");
     paused = false;
+    playAudio(pausedAudio, false);
   }
 
   function circlesCollide(x1, y1, r1, x2, y2, r2) {
