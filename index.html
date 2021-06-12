@@ -144,11 +144,11 @@
 
   // reduce the time
   function countDownSeconds() {
-    subTimeRemaining = subTimeRemaining - 1/60;
     if (diver.isOutOfSub == true) {
       diveTimeRemaining = diveTimeRemaining - 1/60;
     } else {
       diveTimeRemaining = 10;
+      subTimeRemaining = subTimeRemaining - 1/60;
     }
     deathByTime();
   }
