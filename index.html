@@ -317,8 +317,12 @@
     <img src="./assets/fishR2.PNG" id="fishR2" onload="imageLoaded()" hidden />
     <img src="./assets/IMG_0480.PNG" id="chest1" onload="imageLoaded()" hidden />
     <img src="./assets/IMG_0481.PNG" id="chest2" onload="imageLoaded()" hidden />
+    <img src="./assets/IMG_0486.PNG" id="bubble" onload="imageLoaded()" hidden />
+    <img src="./assets/IMG_0491.PNG" id="heart" onload="imageLoaded()" hidden />
+    <img src="./assets/IMG_0492.PNG" id="timer" onload="imageLoaded()" hidden />
+    <img src="./assets/IMG_0490.PNG" id="coin" onload="imageLoaded()" hidden />
 
-    <audio id="menuTune" preload="auto" src="./assets/menu v3.mp3" type="audio/mpeg" loop="true">
+    <audio id="menuTune" preload="auto" src="./assets/menu v4.mp3" type="audio/mpeg" loop="true">
       Your browser does not support the audio element
     </audio>
     <audio id="subTune" preload="auto" src="./assets/in-sub v2.mp3" type="audio/mpeg"></audio>
@@ -530,7 +534,7 @@
   let maps_data = [];
   let mapInitInterval = setInterval(initMap, 500);
   function initMap() {
-    if (loadedImgs == 18) {
+    if (loadedImgs == 23) {
       const mlctx = mapLoader.getContext("2d");
       c_maps.forEach((map) => {
         mlctx.clearRect(0, 0, SIZE, MAP_H);
@@ -540,6 +544,7 @@
       });
       clearInterval(mapInitInterval);
       playBtn.disabled = false;
+      console.log("finally loaded!");
     }
   }
 
