@@ -76,9 +76,32 @@
       font-size: 3em;
     }
 
-    #playBtn {
+    .playBtn {
       display: block;
       margin: 10px auto;
+    }
+
+    .settingsScreen {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .settingsScreen select {
+      background-color: teal;
+      color: white;
+      padding: 0;
+      width: 150px;
+      height: 27.71px;
+      border: 2px outset turquoise;
+      font-size: 20px;
+      -webkit-appearance: button;
+      appearance: button;
+      outline: none;
+      font-family: "VT323", monospace;
+      border-radius: 3px;
+      box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.658);
+      -webkit-text-stroke-color: black;
+      text-shadow: 0.3px 0.3px 0 #000, 0.3px 0.3px 0 #000, 0.3px 0.3px 0 #000, 0.3px 0.3px 0 #000, 0.3px 0.3px 0 #000;
     }
 
     .scoreCard {
@@ -180,7 +203,8 @@
     <div id="startScreen" class="startScreen">
       <div>
         <h2 class="title">Twenty Five Hundred Pixels Under the Sea!</h2>
-        <button id="playBtn" onclick="goToMenu()" disabled>Start!</button>
+        <div id="loadingMsg" class="playBtn">Loading...</div>
+        <button id="playBtn" class="hidden playBtn" onclick="goToMenu()" disabled>Start!</button>
       </div>
     </div>
     <!-- main menu -->
@@ -207,7 +231,7 @@
       </div>
     </div>
     <!-- settings -->
-    <div id="settingsScreen" class="hidden">
+    <div id="settingsScreen" class="hidden settingsScreen">
       <select id="difficulty">
         <option value="0" selected>Easy</option>
         <option value="1">Medium</option>
@@ -307,6 +331,16 @@
     <img src="./assets/subL02.PNG" id="subL2" onload="imageLoaded()" hidden />
     <img src="./assets/subR01.png" id="subR1" onload="imageLoaded()" hidden />
     <img src="./assets/subR02.png" id="subR2" onload="imageLoaded()" hidden />
+    <img src="./assets/diverL01.png" id="diverL1" onload="imageLoaded()" hidden />
+    <img src="./assets/diverL02.png" id="diverL2" onload="imageLoaded()" hidden />
+    <img src="./assets/diverR01.PNG" id="diverR1" onload="imageLoaded()" hidden />
+    <img src="./assets/diverR02.PNG" id="diverR2" onload="imageLoaded()" hidden />
+    <img src="./assets/fishL1.png" id="fishL1" onload="imageLoaded()" hidden />
+    <img src="./assets/fishL2.png" id="fishL2" onload="imageLoaded()" hidden />
+    <img src="./assets/fishR1.PNG" id="fishR1" onload="imageLoaded()" hidden />
+    <img src="./assets/fishR2.PNG" id="fishR2" onload="imageLoaded()" hidden />
+    <img src="./assets/IMG_0480.PNG" id="chest1" onload="imageLoaded()" hidden />
+    <img src="./assets/IMG_0481.PNG" id="chest2" onload="imageLoaded()" hidden />
     <img src="./assets/IMG_0486.PNG" id="bubble" onload="imageLoaded()" hidden />
     <img src="./assets/IMG_0491.PNG" id="heart" onload="imageLoaded()" hidden />
     <img src="./assets/IMG_0492.PNG" id="timer" onload="imageLoaded()" hidden />
@@ -520,27 +554,31 @@
       playAudio(pausedAudio, true);
     }
   }
+
+  let maps_data = [];
+  let mapInitInterval = setInterval(initMap, 500);
   function initMap() {
-    if (loadedImgs == 12) {
+    if (loadedImgs == 22) {
       const mlctx = mapLoader.getContext("2d");
-      maps_data = [];
-      c_maps.forEach((c_map) => {
-        mlctx.drawImage(c_map, 0, 0);
+      c_maps.forEach((map) => {
+        mlctx.clearRect(0, 0, SIZE, MAP_H);
+        mlctx.drawImage(map, 0, 0);
         maps_data.push(getCanvasData(mlctx));
         flushToCanvas();
-        clearInterval(mapInitInterval);
       });
+      clearInterval(mapInitInterval);
       playBtn.disabled = false;
-      console.log("finally loaded!")
+      playBtn.classList.remove("hidden");
+      loadingMsg.classList.add("hidden");
+      console.log("finally loaded!");
     }
   }
-  let mapInitInterval = setInterval(initMap, 500);
 
   // Let the games begin //
   function startGame(lvl) {
-    map_data = maps_data[lvl - 1];
-    bckgrndImg = bckgrnds[lvl - 1];
     chosenLvl = lvl;
+    map_data = maps_data[chosenLvl - 1];
+    bckgrndImg = bckgrnds[chosenLvl - 1];
     updateDifficulty();
     canvas.classList.remove("hidden");
     startScreen.classList.add("hidden");
@@ -616,11 +654,11 @@
 
     // check for treasure collision
     chests.forEach((chest, idx) => {
-      chest.update();
-      if (diver.isOutOfSub && circlesCollide(diver.cx, diver.cy, diver.h / 2, chest.x, chest.y, chest.r)) {
-        particles.explode(chest.x, chest.y, "green");
+      if (diver.isOutOfSub && circlesCollide(diver.cx, diver.cy, diver.h / 2, chest.x, chest.y, chest.r) && !chest.isOpen) {
+        particles.explode(chest.x, chest.y, "orange", (t = 10), (rscale = 6));
         increasePoints(chest.loot);
-        chests.splice(idx, 1);
+        chest.loot = 0;
+        chest.isOpen = true;
       }
     });
 
