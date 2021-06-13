@@ -92,8 +92,12 @@ class Submarine {
     }
 
     if (keys[" "]) {
-      if (!this.justBoosted && this.landed){
-        particles.explode(this.x, this.y, "lightblue");
+      if (!this.justBoosted && this.landed) {
+        let xVal = this.x;
+        if (this.facingLeft) {
+          xVal = this.x + this.dw;
+        }
+        particles.explode(xVal, this.y, "lightblue");
         this.boostAmount = 10;
         this.justBoosted = true;
         this.landed = false;
@@ -116,7 +120,8 @@ class Submarine {
           if (this.boostAmount > 0) {
             this.justBoosted = false;
             this.y -= 5;
-            this.boostAmount--;}
+            this.boostAmount--;
+          }
         } else {
           //landed on something
           if (this.justBoosted) {
@@ -140,14 +145,15 @@ class Submarine {
           if (this.boostAmount > 0) {
             this.justBoosted = false;
             this.y += 5;
-            this.boostAmount--;}
-          } else {
-            //landed on something
-            this.landed = true;
-            if (this.justBoosted) {
-              this.justBoosted = false;
-              this.y += 20;
-              this.boostAmount--;
+            this.boostAmount--;
+          }
+        } else {
+          //landed on something
+          this.landed = true;
+          if (this.justBoosted) {
+            this.justBoosted = false;
+            this.y += 20;
+            this.boostAmount--;
           } else {
             this.vy = 0;
             this.takingDamage = true;
