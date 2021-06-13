@@ -7,12 +7,19 @@ class Submarine {
 
   w = 50;
   h = 50;
+
+  dw = 70;
+  dh = 70;
   speed = 2;
   boost = 0;
 
   isGoingDown = true;
   takingDamage = false;
 
+  facingLeft = false;
+  frameTime = 200;
+  subL = [subL1, subL2];
+  subR = [subR1, subR2];
   get cx() {
     return this.x + this.w / 2;
   }
@@ -129,6 +136,10 @@ class Submarine {
         }
       }
     }
+
+    if (this.vx != 0) {
+      this.facingLeft = this.vx < 0;
+    }
   }
   reset(xcord, ycord) {
     this.x = xcord;
@@ -136,7 +147,15 @@ class Submarine {
   }
 
   draw(ctx) {
+    const frame = Math.floor(Date.now() / this.frameTime) % 2;
+    let image;
+    if (this.facingLeft) {
+      image = this.subL[frame];
+    } else {
+      image = this.subR[frame];
+    }
     ctx.fillStyle = "green";
-    ctx.fillRect(this.x, this.y, 50, 50);
+    ctx.fillRect(this.x, this.y, this.w, this.h);
+    ctx.drawImage(image, this.cx - this.dw / 2, this.cy - this.dh / 2, this.dw, this.dh);
   }
 }

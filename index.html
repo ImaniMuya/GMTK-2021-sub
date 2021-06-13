@@ -58,6 +58,29 @@
       height: 100vmin;
       background-color: rgb(255, 192, 203);
     }
+
+    .startScreen {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      background-image: url("./assets/IMG_0494.jpg");
+      background-position: center;
+      background-size: 100% 100%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .startScreen .title {
+      color: yellow;
+      font-size: 3em;
+    }
+
+    #playBtn {
+      display: block;
+      margin: 10px auto;
+    }
+
     .scoreCard {
       color: white;
       position: absolute;
@@ -139,9 +162,11 @@
   </style>
   <body>
     <!-- start -->
-    <div id="startScreen">
-      <h2>Press Start to Play!</h2>
-      <button id="playBtn" onclick="goToMenu()" disabled>Start!</button>
+    <div id="startScreen" class="startScreen">
+      <div>
+        <h2 class="title">Twenty Five Hundred Pixels Under the Sea!</h2>
+        <button id="playBtn" onclick="goToMenu()" disabled>Start!</button>
+      </div>
     </div>
     <!-- main menu -->
     <div id="menu" class="hidden menu-btns">
@@ -231,13 +256,14 @@
 
     <!-- assets -->
     <img src="./assets/filler-underwater-background.jpg" id="backgroundpic" hidden />
-    <img src="./assets/lvl1.png" id="c_map1" onload="imageLoaded()" hidden />
-    <img src="./assets/lvl2.png" id="c_map2" onload="imageLoaded()" hidden />
-    <img src="./assets/lvl3.png" id="c_map3" onload="imageLoaded()" hidden />
     <img src="./assets/IMG_0489.PNG" id="bckgrndImg1" onload="imageLoaded()" hidden />
     <img src="./assets/IMG_0488.png" id="bckgrndImg2" onload="imageLoaded()" hidden />
     <img src="./assets/IMG_0487.png" id="bckgrndImg3" onload="imageLoaded()" hidden />
     <img src="./assets/IMG_0493.jpg" id="waterPic" onload="imageLoaded()" hidden />
+    <img src="./assets/subL01.PNG" id="subL1" onload="imageLoaded()" hidden />
+    <img src="./assets/subL02.PNG" id="subL2" onload="imageLoaded()" hidden />
+    <img src="./assets/subR01.PNG" id="subR1" onload="imageLoaded()" hidden />
+    <img src="./assets/subR02.PNG" id="subR2" onload="imageLoaded()" hidden />
 
     <audio id="menuTune" preload="auto" src="./assets/menu v3.mp3" type="audio/mpeg" loop="true">
       Your browser does not support the audio element
@@ -266,7 +292,7 @@
   const renderer = document.getElementById("renderer");
   const vis_ctx = canvas.getContext("2d");
   const ctx = renderer.getContext("2d");
-  const c_maps = [c_map1, c_map2, c_map3];
+  const c_maps = [bckgrndImg1, bckgrndImg2, bckgrndImg3];
   const bckgrnds = [bckgrndImg1, bckgrndImg2, bckgrndImg3];
   const SIZE = 1000;
   const MAP_H = 2500;
@@ -287,9 +313,8 @@
   var difficultyLevel;
   var onScreen;
   const TILES = {
-    "255,174,201,255": null,
-    "255,255,255,255": 0,
-    "0,0,0,255": 1,
+    0: null,
+    255: 1,
   };
   let chosenLvl;
   let bckgrndImg;
@@ -449,7 +474,7 @@
     }
   }
   function initMap() {
-    if (loadedImgs == 7) {
+    if (loadedImgs == 8) {
       const mlctx = mapLoader.getContext("2d");
       maps_data = [];
       c_maps.forEach((c_map) => {

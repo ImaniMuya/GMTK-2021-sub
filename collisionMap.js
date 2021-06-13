@@ -7,8 +7,7 @@ function getCanvasData(ctx) {
     data.push([]);
     for (let col = 0; col < SIZE; col++) {
       let pos = 4 * (col + row * SIZE);
-      let colorstr = raw_data.slice(pos, pos + 4).toString();
-      let tileid = TILES[colorstr];
+      let tileid = TILES[raw_data[pos + 3]];
       data[row].push(tileid);
     }
   }
