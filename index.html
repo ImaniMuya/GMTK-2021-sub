@@ -133,6 +133,7 @@
     <img src="./assets/filler-underwater-background.jpg" id="backgroundpic" hidden />
     <img src="./assets/lvl1.png" id="c_map1" onload="imageLoaded()" hidden />
     <img src="./assets/lvl2.png" id="c_map2" onload="imageLoaded()" hidden />
+    <img src="./assets/lvl3.png" id="c_map3" onload="imageLoaded()" hidden />
     <audio id="menuTune" preload="auto" src="./assets/menu v3.mp3" type="audio/mpeg" loop="true">
       Your browser does not support the audio element
     </audio>
@@ -159,8 +160,8 @@
   const renderer = document.getElementById("renderer");
   const vis_ctx = canvas.getContext("2d");
   const ctx = renderer.getContext("2d");
-  const c_maps = [c_map1, c_map2];
-  const bckgrnds = [c_map1, c_map2];
+  const c_maps = [c_map1, c_map2, c_map3];
+  const bckgrnds = [c_map1, c_map2, c_map3];
 
   const SIZE = 1000;
   const MAP_H = 2500;
@@ -229,7 +230,6 @@
     if (localStorage.getItem(chosenLvl + "-time") > time && localStorage.getItem(chosenLvl + "-points") < points) {
       localStorage.setItem(chosenLvl + "-time", time);
       localStorage.setItem(chosenLvl + "-points", points);
-      console.log("new high score!");
     }
     highScore.innerText = localStorage.getItem(chosenLvl + "-points") + " coins in " + localStorage.getItem(chosenLvl + "-time") + " seconds";
   }
@@ -307,7 +307,7 @@
   }
 
   function initMap() {
-    if (loadedImgs == 2) {
+    if (loadedImgs == 3) {
       const mlctx = mapLoader.getContext("2d");
       maps_data = [];
       c_maps.forEach((c_map) => {
