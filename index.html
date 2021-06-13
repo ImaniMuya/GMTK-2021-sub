@@ -139,6 +139,7 @@
       <button id="level3" value="3" onclick="startGame(3)">Level3</button>
       <button id="controlBtn" onclick="goToControls()">Controls</button>
       <button id="settingsBtn" onclick="goToSettings()">Settings</button>
+      <button id="creditsBtn" onclick="goToCredits()">Credits</button>
     </div>
     <!-- score card -->
     <div id="score" class="hidden scoreCard">
@@ -190,6 +191,24 @@
       <p>placeholder for control screen</p>
       <button id="resume" onclick="hideControlOverlay()">Resume</button>
     </div>
+    <!-- credits page -->
+    <div class="hidden" id="credits">
+      <h2>Credits</h2>
+      <p>Fearless Coders</p>
+      <ul>
+        <li>Imani Muya</li>
+        <li>Jessica Hofmeister</li>
+      </ul>
+      <p>Art and Style Virtuoso</p>
+      <ul>
+        <li>Mary Newenheisen</li>
+      </ul>
+      <p>Music Magician</p>
+      <ul>
+        <li>Brendan Wallace</li>
+      </ul>
+      <button id="menuBtn" onclick="goToMenu()">Back</button>
+    </div>
     <!-- canvas -->
     <canvas id="canvas" class="hidden" width="1000" height="1000">Your browser doesn't support html5 canvas!</canvas>
     <canvas hidden id="renderer" width="1000" height="1000"></canvas>
@@ -221,7 +240,7 @@
 <script src="diver.js"></script>
 <script src="submarine.js"></script>
 <script>
-  // Settin it all up
+  // Settin it all up //
   document.getElementById("deathTune").loop = false;
   const canvas = document.getElementById("canvas");
   const renderer = document.getElementById("renderer");
@@ -256,7 +275,7 @@
   let done = false;
   let win = false;
 
-  // inits
+  // Inits //
   let submarine = new Submarine();
   let diver = new Diver();
   let camera = new Camera();
@@ -265,7 +284,7 @@
   let chests = getChests(1);
   let fishes = getFishes(1);
 
-  // Buttons
+  // Buttons //
   var resumeInput = document.getElementById("resume");
   var controlIconBtnInput = document.getElementById("controlIconBtn");
   var goDownButtonInput = document.getElementById("goDownButton");
@@ -296,7 +315,7 @@
     }
   });
 
-  // Navigation
+  // Navigation //
   function goToSettings() {
     menu.classList.add("hidden");
     settingsScreen.classList.remove("hidden");
@@ -314,6 +333,7 @@
     controlPage.classList.add("hidden");
     controlOverlay.classList.add("hidden");
     controlIcon.classList.add("hidden");
+    credits.classList.add("hidden");
     playAudio("menuTune", true);
   }
   function goToControls() {
@@ -327,7 +347,10 @@
     controlOverlay.classList.add("hidden");
     controlIcon.classList.add("hidden");
   }
-
+  function goToCredits() {
+    menu.classList.add("hidden");
+    credits.classList.remove("hidden");
+  }
   function showScore() {
     score.classList.remove("hidden");
     startScreen.classList.add("hidden");
@@ -352,20 +375,74 @@
     }
     highScore.innerText = localStorage.getItem(chosenLvl + "-points") + " coins in " + localStorage.getItem(chosenLvl + "-time") + " seconds";
   }
-
   function hideControlOverlay() {
     controlOverlay.classList.add("hidden");
     playAudio("subTune", false);
     paused = false;
   }
-
   function showControlOverlay() {
     controlOverlay.classList.remove("hidden");
     pauseAudio("subTune");
     paused = true;
   }
 
-  // Let the games begin
+  // Housekeeping //
+  function updateDifficulty() {
+    var chosenDifficultyLevel = document.getElementById("difficulty");
+    difficultyLevel = chosenDifficultyLevel.options[chosenDifficultyLevel.selectedIndex].value;
+  }
+
+  function playAudio(track, startOver) {
+    if (track == "treasureTune") {
+      document.getElementById(track).play();
+    } else if (audioOn && playingAudio != track) {
+      if (playingAudio) {
+        pauseAudio(playingAudio);
+      }
+      var audio = document.getElementById(track);
+      if (startOver) {
+        audio.currentTime = 0;
+      }
+      audio.play();
+      playingAudio = track;
+    }
+  }
+  function pauseAudio(track) {
+    var audio = document.getElementById(track);
+    audio.pause();
+    playingAudio = "";
+    pausedAudio = track;
+  }
+  function toggleAudio() {
+    var audioOnBtn = document.getElementById("audioOnBtn");
+    if (audioOnBtn.value == "On") {
+      audioOnBtn.value = "Off";
+      audioOnBtn.innerText = "Volume Off";
+      audioOn = false;
+      pauseAudio(playingAudio);
+    } else {
+      audioOnBtn.value = "On";
+      audioOnBtn.innerText = "Volume On";
+      audioOn = true;
+      playAudio(pausedAudio, true);
+    }
+  }
+  function initMap() {
+    if (loadedImgs == 3) {
+      const mlctx = mapLoader.getContext("2d");
+      maps_data = [];
+      c_maps.forEach((c_map) => {
+        mlctx.drawImage(c_map, 0, 0);
+        maps_data.push(getCanvasData(mlctx));
+        flushToCanvas();
+        clearInterval(mapInitInterval);
+      });
+      playBtn.disabled = false;
+    }
+  }
+  let mapInitInterval = setInterval(initMap, 500);
+
+  // Let the games begin //
   function startGame(lvl) {
     map_data = maps_data[lvl - 1];
     bckgrndImg = bckgrnds[lvl - 1];
@@ -397,63 +474,7 @@
     tick();
   }
 
-  function updateDifficulty() {
-    var chosenDifficultyLevel = document.getElementById("difficulty");
-    difficultyLevel = chosenDifficultyLevel.options[chosenDifficultyLevel.selectedIndex].value;
-  }
-
-  function playAudio(track, startOver) {
-    if (track == "treasureTune") {
-      document.getElementById(track).play();
-    } else if (audioOn && playingAudio != track) {
-      if (playingAudio) {
-        pauseAudio(playingAudio);
-      }
-      var audio = document.getElementById(track);
-      if (startOver) {
-        audio.currentTime = 0;
-      }
-      audio.play();
-      playingAudio = track;
-    }
-  }
-
-  function pauseAudio(track) {
-    var audio = document.getElementById(track);
-    audio.pause();
-    playingAudio = "";
-    pausedAudio = track;
-  }
-
-  function toggleAudio() {
-    var audioOnBtn = document.getElementById("audioOnBtn");
-    if (audioOnBtn.value == "On") {
-      audioOnBtn.value = "Off";
-      audioOnBtn.innerText = "Volume Off";
-      audioOn = false;
-      pauseAudio(playingAudio);
-    } else {
-      audioOnBtn.value = "On";
-      audioOnBtn.innerText = "Volume On";
-      audioOn = true;
-      playAudio(pausedAudio, true);
-    }
-  }
-
-  function initMap() {
-    if (loadedImgs == 3) {
-      const mlctx = mapLoader.getContext("2d");
-      maps_data = [];
-      c_maps.forEach((c_map) => {
-        mlctx.drawImage(c_map, 0, 0);
-        maps_data.push(getCanvasData(mlctx));
-        flushToCanvas();
-        clearInterval(mapInitInterval);
-      });
-      playBtn.disabled = false;
-    }
-  }
-  let mapInitInterval = setInterval(initMap, 500);
+  // MAIN LOOP //
 
   function tick() {
     update();
@@ -461,63 +482,6 @@
     if (!done) {
       requestAnimationFrame(tick);
     }
-  }
-
-  // reduce the time
-  function countDownSeconds() {
-    if (diver.isOutOfSub == true) {
-      diveTimeRemaining = diveTimeRemaining - 1 / 60;
-    } else {
-      diveTimeRemaining = 10;
-      subTimeRemaining = subTimeRemaining - 1 / 60;
-    }
-    deathByTime();
-  }
-
-  // when you run out of time
-  function deathByTime() {
-    if (subTimeRemaining <= 0 || diveTimeRemaining <= 0) {
-      console.log("YOU DIED");
-      done = true;
-      lossScreen.classList.remove("hidden");
-      lossMsg.innerText = "You ran out of time";
-      dead = true;
-    }
-  }
-
-  //when you run out of lives
-  function deathByBlows() {
-    if (subLives == 0) {
-      dead = true;
-    }
-  }
-
-  function reduceHealth() {
-    if (hitGrace == 0 && submarine.takingDamage) {
-      subLives = subLives - difficultyLevel;
-      hitGrace = hitGrace + 0.5;
-      var hitTimer = setTimeout(updateHitGrace, 1000);
-      deathByBlows();
-    }
-  }
-
-  //determine how soon health can be reduced again
-  function updateHitGrace() {
-    hitGrace = hitGrace - 0.5;
-  }
-
-  function increasePoints(amt) {
-    points += amt;
-    playAudio("treasureTune", true);
-  }
-
-  function increaseSpeed(amt, entity) {
-    if (entity == "sub") {
-      submarine.speed += amt / 2;
-    } else {
-      diver.speed += amt / 2;
-    }
-    playAudio("treasureTune", true);
   }
 
   function draw() {
@@ -556,6 +520,7 @@
       playAudio("subTune", false);
     }
 
+    // check for treasure collision
     chests.forEach((chest, idx) => {
       chest.update();
       if (diver.isOutOfSub && circlesCollide(diver.cx, diver.cy, diver.h / 2, chest.x, chest.y, chest.r)) {
@@ -565,6 +530,7 @@
       }
     });
 
+    // check for fish collision
     fishes.forEach((fish, idx) => {
       fish.update();
       if (diver.isOutOfSub && circlesCollide(diver.cx, diver.cy, diver.h / 2, fish.x, fish.y, fish.r)) {
@@ -577,11 +543,6 @@
     if (keys["Escape"]) {
       done = true;
       goToMenu();
-    }
-    if (keys["g"]) {
-      controlOverlay.classList.remove("hidden");
-      pauseAudio("subTune");
-      paused = true;
     }
 
     // win
@@ -596,6 +557,7 @@
       switchDirectionsPrompt();
       keys["q"] = false;
     }
+
     //lose
     if (dead) {
       done = true;
@@ -608,6 +570,61 @@
     }
   }
 
+  // GAME PLAY HELPER FUNCTIONS //
+
+  // collect your stuff
+  function increasePoints(amt) {
+    points += amt;
+    playAudio("treasureTune", true);
+  }
+  function increaseSpeed(amt, entity) {
+    if (entity == "sub") {
+      submarine.speed += amt / 2;
+    } else {
+      diver.speed += amt / 2;
+    }
+    playAudio("treasureTune", true);
+  }
+
+  // reduce your stuff
+  function countDownSeconds() {
+    if (diver.isOutOfSub == true) {
+      diveTimeRemaining = diveTimeRemaining - 1 / 60;
+    } else {
+      diveTimeRemaining = 10;
+      subTimeRemaining = subTimeRemaining - 1 / 60;
+    }
+    deathByTime();
+  }
+  function reduceHealth() {
+    if (hitGrace == 0 && submarine.takingDamage) {
+      subLives = subLives - difficultyLevel;
+      hitGrace = hitGrace + 0.5;
+      var hitTimer = setTimeout(updateHitGrace, 1000);
+      deathByBlows();
+    }
+  }
+  function updateHitGrace() { // determine how soon health can be reduced again
+    hitGrace = hitGrace - 0.5;
+  }
+
+  // ways to die
+  function deathByTime() {
+    if (subTimeRemaining <= 0 || diveTimeRemaining <= 0) {
+      console.log("YOU DIED");
+      done = true;
+      lossScreen.classList.remove("hidden");
+      lossMsg.innerText = "You ran out of time";
+      dead = true;
+    }
+  }
+  function deathByBlows() {
+    if (subLives == 0) {
+      dead = true;
+    }
+  }
+
+  // switch sub direction
   function switchDirectionsPrompt() {
     paused = true;
     pauseAudio(playingAudio);
@@ -626,6 +643,7 @@
     playAudio(pausedAudio, false);
   }
 
+  // collision
   function circlesCollide(x1, y1, r1, x2, y2, r2) {
     const dx = x1 - x2;
     const dy = y1 - y2;
@@ -634,6 +652,7 @@
     return dsq < rsq;
   }
 
+  // key input
   window.onkeydown = function (event) {
     const k = event.key;
     keys[k] = true;
