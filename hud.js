@@ -3,7 +3,7 @@ class HUD {
   x = 0;
 
   draw() {
-    ctx.font = "italic 18px Arial";
+    ctx.font = "normal 18px VT323";
     ctx.textAlign = "left";
     ctx.textBaseline = "middle";
     ctx.fillStyle = "rgba(0, 0, 0, 0.2)";

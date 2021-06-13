@@ -12,6 +12,9 @@
     }
   </script>
   <style>
+    @import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+  </style>
+  <style>
     body {
       display: flex;
       align-items: center;
@@ -21,7 +24,7 @@
       background-color: darkgray;
       color: white;
       min-height: 100vh;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: "VT323", monospace;
     }
 
     button {
@@ -32,6 +35,7 @@
       border-radius: 3px;
       box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.658);
       cursor: pointer;
+      font-family: "VT323", monospace;
     }
 
     button:active {
@@ -263,28 +267,28 @@
   var goDownButtonInput = document.getElementById("goDownButton");
   var goUpButtonInput = document.getElementById("goUpButton");
 
-  resumeInput.addEventListener("keyup", function(event) {
-  if (event.keyCode === 13) {
-    event.preventDefault();
-    document.getElementById("resume").click();
+  resumeInput.addEventListener("keyup", function (event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      document.getElementById("resume").click();
     }
   });
-  controlIconBtnInput.addEventListener("keyup", function(event) {
-  if (event.keyCode === 13) {
-    event.preventDefault();
-    document.getElementById("controlIconBtn").click();
+  controlIconBtnInput.addEventListener("keyup", function (event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      document.getElementById("controlIconBtn").click();
     }
   });
-  goDownButtonInput.addEventListener("keyup", function(event) {
-  if (event.keyCode === 13) {
-    event.preventDefault();
-    document.getElementById("goDownButton").click();
+  goDownButtonInput.addEventListener("keyup", function (event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      document.getElementById("goDownButton").click();
     }
   });
-  goUpButtonInput.addEventListener("keyup", function(event) {
-  if (event.keyCode === 13) {
-    event.preventDefault();
-    document.getElementById("goUpButton").click();
+  goUpButtonInput.addEventListener("keyup", function (event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      document.getElementById("goUpButton").click();
     }
   });
 
