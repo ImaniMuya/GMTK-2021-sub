@@ -27,6 +27,9 @@
       font-family: "VT323", monospace;
       -webkit-text-stroke-color: black;
       text-shadow: 0.3px 0.3px 0 #000, 0.3px 0.3px 0 #000, 0.3px 0.3px 0 #000, 0.3px 0.3px 0 #000, 0.3px 0.3px 0 #000;
+      background-image: url("./assets/bodyBackground.png");
+      background-position: center;
+      background-size: 100% 100%;
     }
 
     button {
@@ -231,6 +234,11 @@
     <img src="./assets/lvl1.png" id="c_map1" onload="imageLoaded()" hidden />
     <img src="./assets/lvl2.png" id="c_map2" onload="imageLoaded()" hidden />
     <img src="./assets/lvl3.png" id="c_map3" onload="imageLoaded()" hidden />
+    <img src="./assets/IMG_0489.PNG" id="bckgrndImg1" onload="imageLoaded()" hidden />
+    <img src="./assets/IMG_0488.png" id="bckgrndImg2" onload="imageLoaded()" hidden />
+    <img src="./assets/IMG_0487.png" id="bckgrndImg3" onload="imageLoaded()" hidden />
+    <img src="./assets/IMG_0493.jpg" id="waterPic" onload="imageLoaded()" hidden />
+
     <audio id="menuTune" preload="auto" src="./assets/menu v3.mp3" type="audio/mpeg" loop="true">
       Your browser does not support the audio element
     </audio>
@@ -259,7 +267,7 @@
   const vis_ctx = canvas.getContext("2d");
   const ctx = renderer.getContext("2d");
   const c_maps = [c_map1, c_map2, c_map3];
-  const bckgrnds = [c_map1, c_map2, c_map3];
+  const bckgrnds = [bckgrndImg1, bckgrndImg2, bckgrndImg3];
   const SIZE = 1000;
   const MAP_H = 2500;
   const keys = {};
@@ -284,6 +292,7 @@
     "0,0,0,255": 1,
   };
   let chosenLvl;
+  let bckgrndImg;
   let done = false;
   let win = false;
 
@@ -440,7 +449,7 @@
     }
   }
   function initMap() {
-    if (loadedImgs == 3) {
+    if (loadedImgs == 7) {
       const mlctx = mapLoader.getContext("2d");
       maps_data = [];
       c_maps.forEach((c_map) => {
@@ -502,8 +511,8 @@
 
     const cameraBase = (camera.y / 10) % MAP_H;
     // ctx.drawImage(backgroundpic, 0, cameraBase, SIZE, MAP_H);
-    // ctx.drawImage(backgroundpic, 0, 0 + SIZE, SIZE, SIZE);
     ctx.translate(camera.x, camera.y);
+    ctx.drawImage(waterPic, 0, -camera.y / 2, SIZE, MAP_H);
     ctx.drawImage(bckgrndImg, 0, 0, SIZE, MAP_H);
 
     submarine.draw(ctx);
