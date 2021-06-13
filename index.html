@@ -134,6 +134,21 @@
       width: 20px;
       background-color: rgba(128, 128, 128, 0.445);
     }
+
+    .controlImg {
+      background-image: url("./assets/controls.png");
+      background-position: center;
+      background-size: 100% 100%;
+      width: 500px;
+      height: 250px;
+    }
+
+    .controlsKey {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+    }
+
     .btn-group {
       display: flex;
       flex-direction: row;
@@ -218,7 +233,21 @@
     <!-- control page -->
     <div class="hidden" id="controlPage">
       <h2>Controls</h2>
-      <p>placeholder for control screen</p>
+      <div class="controlImg"></div>
+      <div class="controlsKey pb-10">
+        <div>
+          <p>Submarine</p>
+          <div>A/D - Move Left and Right</div>
+          <div>Q - Start Return</div>
+          <div>W/E - Drop/Pick-up Diver</div>
+          <div>SPACE - small boost when stuck in coral</div>
+        </div>
+        <div>
+          <p>Diver</p>
+          <div>Arrow Left/Right - Move Left and Right</div>
+          <div>Arrow Up/Down - Move Up and Down</div>
+        </div>
+      </div>
       <button id="controlToMenu" onclick="goToMenu()">Back</button>
     </div>
     <!-- control icon -->
@@ -228,7 +257,21 @@
     <!-- control overlay -->
     <div class="hidden controlOverlay" id="controlOverlay">
       <h2>Controls</h2>
-      <p>placeholder for control screen</p>
+      <div class="controlImg"></div>
+      <div class="controlsKey pb-10">
+        <div>
+          <p>Submarine</p>
+          <div>A/D - Move Left and Right</div>
+          <div>Q - Start Return</div>
+          <div>W/E - Drop/Pick-up Diver</div>
+          <div>SPACE - small boost when stuck in coral</div>
+        </div>
+        <div>
+          <p>Diver</p>
+          <div>Arrow Left/Right - Move Left and Right</div>
+          <div>Arrow Up/Down - Move Up and Down</div>
+        </div>
+      </div>
       <button id="resume" onclick="hideControlOverlay()">Resume</button>
     </div>
     <!-- credits page -->
