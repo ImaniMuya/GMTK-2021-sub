@@ -367,16 +367,17 @@
   }
 
   function increasePoints(amt) {
-      points += amt;
-      playAudio("treasureTune", true)
+    points += amt;
+    playAudio("treasureTune", true);
   }
 
-  function increaseSpeed(amt, entity){
+  function increaseSpeed(amt, entity) {
     if (entity == "sub") {
-      submarine.speed += amt/2;
+      submarine.speed += amt / 2;
+    } else {
+      diver.speed += amt / 2;
     }
-    else{diver.speed += amt/2;}
-    playAudio("treasureTune", true)
+    playAudio("treasureTune", true);
   }
 
   function draw() {
@@ -439,7 +440,7 @@
     }
 
     // win
-    if (submarine.y <= 0 && subTimeRemaining > 0) {
+    if (submarine.y <= 5 && subTimeRemaining > 0) {
       win = true;
       done = true;
       showScore();
