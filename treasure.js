@@ -8,6 +8,7 @@ class Treasure {
   update() {
     // this.y++;
   }
+
   draw(ctx) {
     ctx.fillStyle = "green";
     ctx.beginPath();

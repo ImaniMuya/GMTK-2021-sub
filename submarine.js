@@ -25,10 +25,6 @@ class Submarine {
     if (diver.isOutOfSub) {
       return;
     }
-    // check if on bottom
-    if (this.y > 2416 && this.isGoingDown) {
-      switchDirectionsPrompt();
-    }
 
     // check if off camera
     if (this.isGoingDown && this.y <= Math.abs(camera.y) - this.h) {

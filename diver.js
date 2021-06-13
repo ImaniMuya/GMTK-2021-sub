@@ -38,10 +38,9 @@ class Diver {
       if (keys["ArrowUp"]) this.vy = -this.speed;
       if (keys["ArrowDown"]) this.vy = +this.speed;
 
-      if (keys[" "]) {
-        particles.explode(this.x, this.y, "blue");
-        //console.log("x: ", this.x, " y: ", this.y);
-      }
+      // if (keys[" "]) {
+      //   particles.sprayUp(this.x, this.y, "blue");
+      // }
 
       let vx = Math.round(this.vx);
       let bottom = this.y + this.h;
@@ -110,5 +109,6 @@ class Diver {
     }
     ctx.fillStyle = "blue";
     ctx.fillRect(this.x, this.y, 20, 30);
+    particles.sprayUp(this.x, this.y, "blue");
   }
 }

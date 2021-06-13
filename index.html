@@ -409,6 +409,7 @@
     chests.forEach((chest, idx) => {
       chest.update();
       if (diver.isOutOfSub && circlesCollide(diver.cx, diver.cy, diver.h / 2, chest.x, chest.y, chest.r)) {
+        particles.explode(chest.x, chest.y, "green");
         increasePoints(chest.loot);
         chests.splice(idx, 1);
       }
