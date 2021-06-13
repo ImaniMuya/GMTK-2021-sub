@@ -114,6 +114,14 @@
       justify-content: space-evenly;
       gap: 2rem;
     }
+
+    .menu-btns {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      gap: 3rem;
+    }
+
     .hidden {
       display: none;
     }
@@ -133,13 +141,17 @@
       <button id="playBtn" onclick="goToMenu()" disabled>Start!</button>
     </div>
     <!-- main menu -->
-    <div id="menu" class="hidden">
-      <button id="level1" value="1" onclick="startGame(1)">Level1</button>
-      <button id="level2" value="2" onclick="startGame(2)">Level2</button>
-      <button id="level3" value="3" onclick="startGame(3)">Level3</button>
-      <button id="controlBtn" onclick="goToControls()">Controls</button>
-      <button id="settingsBtn" onclick="goToSettings()">Settings</button>
-      <button id="creditsBtn" onclick="goToCredits()">Credits</button>
+    <div id="menu" class="hidden menu-btns">
+      <div class="btn-group">
+        <button id="level1" value="1" onclick="startGame(1)">Level1</button>
+        <button id="level2" value="2" onclick="startGame(2)">Level2</button>
+        <button id="level3" value="3" onclick="startGame(3)">Level3</button>
+      </div>
+      <div class="btn-group">
+        <button id="controlBtn" onclick="goToControls()">Controls</button>
+        <button id="settingsBtn" onclick="goToSettings()">Settings</button>
+        <button id="creditsBtn" onclick="goToCredits()">Credits</button>
+      </div>
     </div>
     <!-- score card -->
     <div id="score" class="hidden scoreCard">
@@ -604,7 +616,8 @@
       deathByBlows();
     }
   }
-  function updateHitGrace() { // determine how soon health can be reduced again
+  function updateHitGrace() {
+    // determine how soon health can be reduced again
     hitGrace = hitGrace - 0.5;
   }
 
