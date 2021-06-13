@@ -129,7 +129,8 @@
 
     <!-- assets -->
     <img src="./assets/filler-underwater-background.jpg" id="backgroundpic" hidden />
-    <img src="./assets/lvl1.png" id="c_map" onload="imageLoaded()" hidden />
+    <img src="./assets/lvl1.png" id="c_map1" onload="imageLoaded()" hidden />
+    <img src="./assets/lvl2.png" id="c_map2" onload="imageLoaded()" hidden />
     <audio id="menuTune" preload="auto" src="./assets/menu v3.mp3" type="audio/mpeg" loop="true">
       Your browser does not support the audio element
     </audio>
@@ -150,11 +151,14 @@
 <script src="diver.js"></script>
 <script src="submarine.js"></script>
 <script>
+  document.getElementById("deathTune").loop = false;
   const canvas = document.getElementById("canvas");
   const renderer = document.getElementById("renderer");
   const vis_ctx = canvas.getContext("2d");
   const ctx = renderer.getContext("2d");
-  document.getElementById("deathTune").loop = false;
+  const c_maps = [c_map1, c_map2];
+  const bckgrnds = [c_map1, c_map2];
+
   const SIZE = 1000;
   const MAP_H = 2500;
   const keys = {};
@@ -214,6 +218,8 @@
   }
 
   function startGame(lvl) {
+    map_data = maps_data[lvl - 1];
+    bckgrndImg = bckgrnds[lvl - 1];
     chosenLvl = lvl;
     updateDifficulty();
     canvas.classList.remove("hidden");
@@ -283,12 +289,15 @@
   }
 
   function initMap() {
-    if (loadedImgs == 1) {
+    if (loadedImgs == 2) {
       const mlctx = mapLoader.getContext("2d");
-      mlctx.drawImage(c_map, 0, 0);
-      map_data = getCanvasData(mlctx);
-      flushToCanvas();
-      clearInterval(mapInitInterval);
+      maps_data = [];
+      c_maps.forEach((c_map) => {
+        mlctx.drawImage(c_map, 0, 0);
+        maps_data.push(getCanvasData(mlctx));
+        flushToCanvas();
+        clearInterval(mapInitInterval);
+      });
       playBtn.disabled = false;
     }
   }
@@ -359,7 +368,7 @@
     // ctx.drawImage(backgroundpic, 0, cameraBase, SIZE, MAP_H);
     // ctx.drawImage(backgroundpic, 0, 0 + SIZE, SIZE, SIZE);
     ctx.translate(camera.x, camera.y);
-    ctx.drawImage(c_map, 0, 0, SIZE, MAP_H);
+    ctx.drawImage(bckgrndImg, 0, 0, SIZE, MAP_H);
 
     submarine.draw(ctx);
     diver.draw(ctx);
@@ -422,7 +431,9 @@
     }
     //lose
     if (dead) {
-      if (diver.isOutOfSub || subLives == 0) {playAudio("deathTune", true);}
+      if (diver.isOutOfSub || subLives == 0) {
+        playAudio("deathTune", true);
+      }
       console.log("YOU DIED");
       done = true;
       lossScreen.classList.remove("hidden");
