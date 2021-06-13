@@ -307,6 +307,10 @@
     <img src="./assets/subL02.PNG" id="subL2" onload="imageLoaded()" hidden />
     <img src="./assets/subR01.png" id="subR1" onload="imageLoaded()" hidden />
     <img src="./assets/subR02.png" id="subR2" onload="imageLoaded()" hidden />
+    <img src="./assets/diverL01.png" id="diverL1" onload="imageLoaded()" hidden />
+    <img src="./assets/diverL02.png" id="diverL2" onload="imageLoaded()" hidden />
+    <img src="./assets/diverR01.PNG" id="diverR1" onload="imageLoaded()" hidden />
+    <img src="./assets/diverR02.PNG" id="diverR2" onload="imageLoaded()" hidden />
 
     <audio id="menuTune" preload="auto" src="./assets/menu v3.mp3" type="audio/mpeg" loop="true">
       Your browser does not support the audio element
@@ -517,7 +521,7 @@
     }
   }
   function initMap() {
-    if (loadedImgs == 8) {
+    if (loadedImgs == 12) {
       const mlctx = mapLoader.getContext("2d");
       maps_data = [];
       c_maps.forEach((c_map) => {

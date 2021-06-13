@@ -7,8 +7,16 @@ class Diver {
 
   w = 20;
   h = 30;
+  dw = 30;
+  dh = 40;
+
   speed = 3;
   isOutOfSub = false;
+
+  facingLeft = false;
+  frameTime = 200;
+  diverL = [diverL1, diverL2];
+  diverR = [diverR1, diverR2];
 
   get cx() {
     return this.x + this.w / 2;
@@ -97,6 +105,10 @@ class Diver {
       this.x = submarine.x;
       this.y = submarine.y;
     }
+
+    if (this.vx != 0) {
+      this.facingLeft = this.vx < 0;
+    }
   }
   reset(xcord, ycord) {
     this.x = xcord;
@@ -108,8 +120,17 @@ class Diver {
     if (!this.isOutOfSub) {
       return;
     }
-    ctx.fillStyle = "blue";
-    ctx.fillRect(this.x, this.y, 20, 30);
-    particles.sprayUp(this.x, this.y, "blue");
+    const frame = Math.floor(Date.now() / this.frameTime) % 2;
+    let image;
+    if (this.facingLeft) {
+      image = this.diverL[frame];
+    } else {
+      image = this.diverR[frame];
+    }
+
+    // ctx.fillStyle = "blue";
+    // ctx.fillRect(this.x, this.y, 20, 30);
+    ctx.drawImage(image, this.cx - this.dw / 2, this.cy - this.dh / 2, this.dw, this.dh);
+    particles.sprayUp(this.cx, this.cy, "blue");
   }
 }

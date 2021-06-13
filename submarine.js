@@ -20,6 +20,7 @@ class Submarine {
   frameTime = 200;
   subL = [subL1, subL2];
   subR = [subR1, subR2];
+
   get cx() {
     return this.x + this.w / 2;
   }
