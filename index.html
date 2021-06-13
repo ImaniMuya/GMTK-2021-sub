@@ -12,6 +12,9 @@
     }
   </script>
   <style>
+    @import url("https://fonts.googleapis.com/css2?family=VT323&display=swap");
+  </style>
+  <style>
     body {
       display: flex;
       align-items: center;
@@ -21,20 +24,26 @@
       background-color: darkgray;
       color: white;
       min-height: 100vh;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: "VT323", monospace;
     }
 
     button {
       padding: 5px 10px;
       background-color: teal;
+      border-color: turquoise;
       color: white;
       border-radius: 3px;
       box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.658);
-      /* cursor: pointer; */
+      cursor: pointer;
+      font-family: "VT323", monospace;
     }
 
     button:active {
       box-shadow: inset 1px 1px 10px #333;
+    }
+
+    button:disabled {
+      background-color: rgba(81, 136, 136, 0.753);
     }
 
     #canvas {
@@ -49,11 +58,11 @@
       flex-direction: column;
       left: 0;
       right: 0;
-      margin-left: auto;
       margin-right: auto;
+      margin-left: auto;
       padding: 20px;
       width: 500px;
-      background-color: pink;
+      background-color: rgba(128, 128, 128, 0.445);
     }
     .goingUp {
       position: absolute;
@@ -85,10 +94,13 @@
       justify-content: center;
       align-items: center;
     }
-    .controlIcon{
+    .controlIcon {
       position: absolute;
-      right: 1%;
-      bottom: 1%;
+      left: 0;
+      right: 0;
+      bottom: 15px;
+      margin-right: auto;
+      margin-left: calc(50% + 265px);
       width: 20px;
       background-color: rgba(128, 128, 128, 0.445);
     }
@@ -102,8 +114,12 @@
       display: none;
     }
 
-    h2 {
-      color: white;
+    .pb-10 {
+      padding-bottom: 10px;
+    }
+
+    .pt-10 {
+      padding-top: 10px;
     }
   </style>
   <body>
@@ -126,7 +142,7 @@
       <div>Loot from your dive: <span id="treasureCount"></span> coins</div>
       <div>Dive time: <span id="diveTime"></span> seconds</div>
       <div>Current High Score: <span id="highScore"></span></div>
-      <div>
+      <div class="pt-10">
         <button id="continueBtn" onclick="goToMenu()">Continue</button>
       </div>
     </div>
@@ -143,7 +159,7 @@
     <!-- losing screen -->
     <div id="lossScreen" class="hidden goingUp">
       <h2>Uh Oh</h2>
-      <div id="lossMsg"></div>
+      <div id="lossMsg" class="pb-10"></div>
       <button id="lossBtn" onclick="goToMenu()">Back to Menu</button>
     </div>
     <!-- going up prompt -->
@@ -251,28 +267,28 @@
   var goDownButtonInput = document.getElementById("goDownButton");
   var goUpButtonInput = document.getElementById("goUpButton");
 
-  resumeInput.addEventListener("keyup", function(event) {
-  if (event.keyCode === 13) {
-    event.preventDefault();
-    document.getElementById("resume").click();
+  resumeInput.addEventListener("keyup", function (event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      document.getElementById("resume").click();
     }
   });
-  controlIconBtnInput.addEventListener("keyup", function(event) {
-  if (event.keyCode === 13) {
-    event.preventDefault();
-    document.getElementById("controlIconBtn").click();
+  controlIconBtnInput.addEventListener("keyup", function (event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      document.getElementById("controlIconBtn").click();
     }
   });
-  goDownButtonInput.addEventListener("keyup", function(event) {
-  if (event.keyCode === 13) {
-    event.preventDefault();
-    document.getElementById("goDownButton").click();
+  goDownButtonInput.addEventListener("keyup", function (event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      document.getElementById("goDownButton").click();
     }
   });
-  goUpButtonInput.addEventListener("keyup", function(event) {
-  if (event.keyCode === 13) {
-    event.preventDefault();
-    document.getElementById("goUpButton").click();
+  goUpButtonInput.addEventListener("keyup", function (event) {
+    if (event.keyCode === 13) {
+      event.preventDefault();
+      document.getElementById("goUpButton").click();
     }
   });
 
@@ -291,7 +307,7 @@
     score.classList.add("hidden");
     canvas.classList.add("hidden");
     lossScreen.classList.add("hidden");
-    controlPage.classList.add("hidden")
+    controlPage.classList.add("hidden");
     controlOverlay.classList.add("hidden");
     controlIcon.classList.add("hidden");
     playAudio("menuTune", true);
@@ -333,12 +349,12 @@
   }
   function hideControlOverlay() {
     controlOverlay.classList.add("hidden");
-    playAudio("subTune", false)
+    playAudio("subTune", false);
     paused = false;
   }
   function showControlOverlay() {
     controlOverlay.classList.remove("hidden");
-    pauseAudio("subTune")
+    pauseAudio("subTune");
     paused = true;
   }
 
@@ -520,8 +536,7 @@
       lossScreen.classList.remove("hidden");
       if (!diver.isOutOfSub && subLives > 0 && onScreen) {
         return;
-      }
-      else{
+      } else {
         playAudio("deathTune", true);
       }
     }
