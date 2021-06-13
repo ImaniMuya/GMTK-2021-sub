@@ -27,14 +27,19 @@
     button {
       padding: 5px 10px;
       background-color: teal;
+      border-color: turquoise;
       color: white;
       border-radius: 3px;
       box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.658);
-      /* cursor: pointer; */
+      cursor: pointer;
     }
 
     button:active {
       box-shadow: inset 1px 1px 10px #333;
+    }
+
+    button:disabled {
+      background-color: rgba(81, 136, 136, 0.753);
     }
 
     #canvas {
@@ -49,8 +54,8 @@
       flex-direction: column;
       left: 0;
       right: 0;
-      margin-left: auto;
       margin-right: auto;
+      margin-left: auto;
       padding: 20px;
       width: 500px;
       background-color: pink;
@@ -85,10 +90,13 @@
       justify-content: center;
       align-items: center;
     }
-    .controlIcon{
+    .controlIcon {
       position: absolute;
-      right: 1%;
-      bottom: 1%;
+      left: 0;
+      right: 0;
+      bottom: 15px;
+      margin-right: auto;
+      margin-left: calc(50% + 265px);
       width: 20px;
       background-color: rgba(128, 128, 128, 0.445);
     }
@@ -259,7 +267,7 @@
     score.classList.add("hidden");
     canvas.classList.add("hidden");
     lossScreen.classList.add("hidden");
-    controlPage.classList.add("hidden")
+    controlPage.classList.add("hidden");
     controlOverlay.classList.add("hidden");
     controlIcon.classList.add("hidden");
     playAudio("menuTune", true);
@@ -303,12 +311,12 @@
 
   function hideControlOverlay() {
     controlOverlay.classList.add("hidden");
-    playAudio("subTune", false)
+    playAudio("subTune", false);
     paused = false;
   }
   function showControlOverlay() {
     controlOverlay.classList.remove("hidden");
-    pauseAudio("subTune")
+    pauseAudio("subTune");
     paused = true;
   }
 
@@ -526,7 +534,7 @@
     }
     if (keys["g"]) {
       controlOverlay.classList.remove("hidden");
-      pauseAudio("subTune")
+      pauseAudio("subTune");
       paused = true;
     }
 
@@ -548,8 +556,7 @@
       lossScreen.classList.remove("hidden");
       if (!diver.isOutOfSub && subLives > 0 && onScreen) {
         return;
-      }
-      else{
+      } else {
         playAudio("deathTune", true);
       }
     }
