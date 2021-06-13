@@ -69,6 +69,28 @@
       justify-content: center;
       align-items: center;
     }
+    .controlOverlay {
+      position: absolute;
+      display: block;
+      left: 0;
+      right: 0;
+      margin-left: auto;
+      margin-right: auto;
+      width: 500px;
+      background-color: rgba(128, 128, 128, 0.445);
+      padding: 20px;
+      display: flex;
+      flex-flow: column nowrap;
+      justify-content: center;
+      align-items: center;
+    }
+    .controlIcon{
+      position: absolute;
+      right: 1%;
+      bottom: 1%;
+      width: 20px;
+      background-color: rgba(128, 128, 128, 0.445);
+    }
     .btn-group {
       display: flex;
       flex-direction: row;
@@ -84,16 +106,20 @@
     }
   </style>
   <body>
+    <!-- start -->
     <div id="startScreen">
       <h2>Press Start to Play!</h2>
       <button id="playBtn" onclick="goToMenu()" disabled>Start!</button>
     </div>
+    <!-- main menu -->
     <div id="menu" class="hidden">
       <button id="level1" value="1" onclick="startGame(1)">Level1</button>
       <button id="level2" value="2" onclick="startGame(2)">Level2</button>
       <button id="level3" value="3" onclick="startGame(3)">Level3</button>
+      <button id="controlBtn" onclick="goToControls()">Controls</button>
       <button id="settingsBtn" onclick="goToSettings()">Settings</button>
     </div>
+    <!-- score card -->
     <div id="score" class="hidden scoreCard">
       <h2>Your Score!</h2>
       <div>Loot from your dive: <span id="treasureCount"></span> Coins</div>
@@ -102,6 +128,7 @@
         <button id="continueBtn" onclick="goToMenu()">Continue</button>
       </div>
     </div>
+    <!-- settings -->
     <div id="settingsScreen" class="hidden">
       <select id="difficulty">
         <option value="0" selected>Easy</option>
@@ -111,11 +138,13 @@
       <button id="audioOnBtn" onclick="toggleAudio()" value="On">Volume On</button>
       <button id="menuBtn" onclick="goToMenu()">Back</button>
     </div>
+    <!-- losing screen -->
     <div id="lossScreen" class="hidden goingUp">
       <h2>Uh Oh</h2>
       <div id="lossMsg"></div>
       <button id="lossBtn" onclick="goToMenu()">Back to Menu</button>
     </div>
+    <!-- going up prompt -->
     <div class="hidden goingUp" id="goingUp">
       <h2>Going Up?</h2>
       <div class="btn-group">
@@ -123,6 +152,23 @@
         <button id="goDownButton" onclick="goDown()">Nope!</button>
       </div>
     </div>
+    <!-- control page -->
+    <div class="hidden" id="controlPage">
+      <h2>Controls</h2>
+      <p>placeholder for control screen</p>
+      <button id="controlToMenu" onclick="goToMenu()">Back</button>
+    </div>
+    <!-- control icon -->
+    <div class="hidden controlIcon" id="controlIcon">
+      <button id="controlIconBtn" onclick="showControlOverlay()">?</button>
+    </div>
+    <!-- control overlay -->
+    <div class="hidden controlOverlay" id="controlOverlay">
+      <h2>Controls</h2>
+      <p>placeholder for control screen</p>
+      <button id="resume" onclick="hideControlOverlay()">Resume</button>
+    </div>
+    <!-- canvas -->
     <canvas id="canvas" class="hidden" width="1000" height="1000">Your browser doesn't support html5 canvas!</canvas>
     <canvas hidden id="renderer" width="1000" height="1000"></canvas>
     <canvas hidden id="mapLoader" width="1000" height="2500"></canvas>
@@ -177,6 +223,7 @@
   var track = "menuTune";
   var startOver = true;
   var difficultyLevel;
+  var onScreen;
   const TILES = {
     "255,174,201,255": null,
     "255,255,255,255": 0,
@@ -197,6 +244,9 @@
   function goToSettings() {
     menu.classList.add("hidden");
     settingsScreen.classList.remove("hidden");
+    controlPage.classList.add("hidden");
+    controlOverlay.classList.add("hidden");
+    controlIcon.classList.add("hidden");
   }
   function goToMenu() {
     startScreen.classList.add("hidden");
@@ -205,18 +255,46 @@
     score.classList.add("hidden");
     canvas.classList.add("hidden");
     lossScreen.classList.add("hidden");
+    controlPage.classList.add("hidden")
+    controlOverlay.classList.add("hidden");
+    controlIcon.classList.add("hidden");
     playAudio("menuTune", true);
   }
+  function goToControls() {
+    startScreen.classList.add("hidden");
+    menu.classList.add("hidden");
+    settingsScreen.classList.add("hidden");
+    score.classList.add("hidden");
+    canvas.classList.add("hidden");
+    lossScreen.classList.add("hidden");
+    controlPage.classList.remove("hidden");
+    controlOverlay.classList.add("hidden");
+    controlIcon.classList.add("hidden");
+  }
+
   function showScore() {
     score.classList.remove("hidden");
     startScreen.classList.add("hidden");
     menu.classList.add("hidden");
     settingsScreen.classList.add("hidden");
+    controlOverlay.classList.add("hidden");
     canvas.classList.add("hidden");
+    controlIcon.classList.add("hidden");
     playAudio("menuTune", true);
     // tally
     treasureCount.innerText = points;
     diveTime.innerText = 60 - Math.floor(subTimeRemaining);
+  }
+
+  function hideControlOverlay() {
+    controlOverlay.classList.add("hidden");
+    playAudio("subTune", false)
+    paused = false;
+  }
+  function showControlOverlay() {
+    controlOverlay.classList.remove("hidden");
+    pauseAudio("subTune")
+    paused = true;
   }
 
   function startGame(lvl) {
@@ -227,6 +305,7 @@
     canvas.classList.remove("hidden");
     startScreen.classList.add("hidden");
     menu.classList.add("hidden");
+    controlIcon.classList.remove("hidden");
     done = false;
     // RESET GAME HERE
     console.log("starting");
@@ -245,6 +324,7 @@
     fishes = getFishes(lvl);
     playAudio("subTune", true);
     paused = false;
+    onScreen = true;
     tick();
   }
 
@@ -428,6 +508,11 @@
       done = true;
       goToMenu();
     }
+    if (keys["g"]) {
+      controlOverlay.classList.remove("hidden");
+      pauseAudio("subTune")
+      paused = true;
+    }
 
     // win
     if (submarine.y <= 0 && subTimeRemaining > 0) {
@@ -443,12 +528,14 @@
     }
     //lose
     if (dead) {
-      if (diver.isOutOfSub || subLives == 0) {
-        playAudio("deathTune", true);
-      }
-      console.log("YOU DIED");
       done = true;
       lossScreen.classList.remove("hidden");
+      if (!diver.isOutOfSub && subLives > 0 && onScreen) {
+        return;
+      }
+      else{
+        playAudio("deathTune", true);
+      }
     }
   }
 

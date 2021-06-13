@@ -30,12 +30,14 @@ class Submarine {
     if (this.isGoingDown && this.y <= Math.abs(camera.y) - this.h) {
       done = true;
       dead = true;
+      onScreen = false;
       lossScreen.classList.remove("hidden");
       lossMsg.innerText = "You were too slow";
     }
     if (!this.isGoingDown && this.y - SIZE >= Math.abs(camera.y)) {
       done = true;
       dead = true;
+      onScreen = false;
       lossScreen.classList.remove("hidden");
       lossMsg.innerText = "You were too slow";
     }

@@ -17,6 +17,5 @@ class HUD {
     ctx.fillText("Sub Time Remaining: " + subTimeRemaining.toFixed(0), 500, 25 - camera.y);
     if (diveTimeRemaining.toFixed(0) < 10) ctx.fillStyle = "red";
     else ctx.fillStyle = "green";
-    ctx.fillText("Dive Time Remaining: " + diveTimeRemaining.toFixed(0), 500, 50 - camera.y);
   }
 }
