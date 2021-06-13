@@ -41,9 +41,16 @@ class HUD {
 
     // Draw Hearts
     if (difficulty.options[difficulty.selectedIndex].value > 0){
-      var heartCounter;
-      for (heartCounter = 0; heartCounter < subLives; heartCounter++) {
-        ctx.drawImage(heartDraw, 10 + (heartCounter * (this.heartW/2)) , 50 - camera.y, this.heartW, this.heartH);
+      var fullHeartCounter;
+      for (fullHeartCounter = 1; fullHeartCounter < subLives; fullHeartCounter+=2) {
+        ctx.drawImage(heartDraw, 10 + ((fullHeartCounter-1)/2 * (this.heartW/2)) , 50 - camera.y, this.heartW, this.heartH);
+      }
+      if (subLives%2 == 1) {
+        var halfHeartCounter;
+        var halfHeartNum = subLives - fullHeartCounter + 1;
+        for (halfHeartCounter = 0; halfHeartCounter < halfHeartNum; halfHeartCounter++) {
+          ctx.drawImage(heartDraw, 10 + ((((fullHeartCounter-1)/2) + halfHeartCounter + .5) * (this.heartW/2)) , 50 + this.heartH/6 - camera.y, this.heartW/1.5, this.heartH/1.5);
+        }
       }
     }
 
