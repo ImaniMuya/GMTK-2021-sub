@@ -58,7 +58,7 @@
       margin-left: auto;
       padding: 20px;
       width: 500px;
-      background-color: pink;
+      background-color: rgba(128, 128, 128, 0.445);
     }
     .goingUp {
       position: absolute;
@@ -110,8 +110,12 @@
       display: none;
     }
 
-    h2 {
-      color: white;
+    .pb-10 {
+      padding-bottom: 10px;
+    }
+
+    .pt-10 {
+      padding-top: 10px;
     }
   </style>
   <body>
@@ -134,7 +138,7 @@
       <div>Loot from your dive: <span id="treasureCount"></span> coins</div>
       <div>Dive time: <span id="diveTime"></span> seconds</div>
       <div>Current High Score: <span id="highScore"></span></div>
-      <div>
+      <div class="pt-10">
         <button id="continueBtn" onclick="goToMenu()">Continue</button>
       </div>
     </div>
@@ -151,7 +155,7 @@
     <!-- losing screen -->
     <div id="lossScreen" class="hidden goingUp">
       <h2>Uh Oh</h2>
-      <div id="lossMsg"></div>
+      <div id="lossMsg" class="pb-10"></div>
       <button id="lossBtn" onclick="goToMenu()">Back to Menu</button>
     </div>
     <!-- going up prompt -->
