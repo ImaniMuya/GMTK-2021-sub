@@ -11,7 +11,9 @@ class Submarine {
   dw = 70;
   dh = 70;
   speed = 2;
-  boost = 0;
+  boostAmount = 0;
+  justBoosted = false;
+  landed = false;
 
   isGoingDown = true;
   takingDamage = false;
@@ -89,10 +91,11 @@ class Submarine {
     }
 
     if (keys[" "]) {
-      particles.explode(this.x, this.y, "pink");
-      this.boost++;
-      if (this.boost >= 10) {
-        this.boost = 0;
+      if (!this.justBoosted && this.landed){
+        particles.explode(this.x, this.y, "lightblue");
+        this.boostAmount = 10;
+        this.justBoosted = true;
+        this.landed = false;
       }
     }
 
@@ -108,12 +111,19 @@ class Submarine {
         if (x_cls == null) {
           this.y++;
           this.takingDamage = false;
+          this.landed = false;
+          if (this.boostAmount > 0) {
+            this.justBoosted = false;
+            this.y -= 5;
+            this.boostAmount--;}
         } else {
           //landed on something
-          if (this.boost) {
-            this.y -= 1.3;
-            this.boost--;
+          if (this.justBoosted) {
+            this.justBoosted = false;
+            this.y -= 20;
+            this.boostAmount--;
           } else {
+            this.landed = true;
             this.vy = 0;
           }
         }
@@ -125,10 +135,18 @@ class Submarine {
         if (x_cls == null) {
           this.y--;
           this.takingDamage = false;
-        } else {
-          if (this.boost) {
-            this.y += 1.3;
-            this.boost--;
+          this.landed = false;
+          if (this.boostAmount > 0) {
+            this.justBoosted = false;
+            this.y += 5;
+            this.boostAmount--;}
+          } else {
+            //landed on something
+            this.landed = true;
+            if (this.justBoosted) {
+              this.justBoosted = false;
+              this.y += 20;
+              this.boostAmount--;
           } else {
             this.vy = 0;
             this.takingDamage = true;
