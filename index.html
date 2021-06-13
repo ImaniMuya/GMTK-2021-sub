@@ -76,7 +76,7 @@
       font-size: 3em;
     }
 
-    #playBtn {
+    .playBtn {
       display: block;
       margin: 10px auto;
     }
@@ -180,7 +180,8 @@
     <div id="startScreen" class="startScreen">
       <div>
         <h2 class="title">Twenty Five Hundred Pixels Under the Sea!</h2>
-        <button id="playBtn" onclick="goToMenu()" disabled>Start!</button>
+        <div id="loadingMsg" class="playBtn">Loading...</div>
+        <button id="playBtn" class="hidden playBtn" onclick="goToMenu()" disabled>Start!</button>
       </div>
     </div>
     <!-- main menu -->
@@ -534,7 +535,7 @@
   let maps_data = [];
   let mapInitInterval = setInterval(initMap, 500);
   function initMap() {
-    if (loadedImgs == 23) {
+    if (loadedImgs == 22) {
       const mlctx = mapLoader.getContext("2d");
       c_maps.forEach((map) => {
         mlctx.clearRect(0, 0, SIZE, MAP_H);
@@ -544,6 +545,8 @@
       });
       clearInterval(mapInitInterval);
       playBtn.disabled = false;
+      playBtn.classList.remove("hidden");
+      loadingMsg.classList.add("hidden");
       console.log("finally loaded!");
     }
   }
