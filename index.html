@@ -81,6 +81,29 @@
       margin: 10px auto;
     }
 
+    .settingsScreen {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+    .settingsScreen select {
+      background-color: teal;
+      color: white;
+      padding: 0;
+      width: 150px;
+      height: 27.71px;
+      border: 2px outset turquoise;
+      font-size: 20px;
+      -webkit-appearance: button;
+      appearance: button;
+      outline: none;
+      font-family: "VT323", monospace;
+      border-radius: 3px;
+      box-shadow: 3px 5px 5px rgba(0, 0, 0, 0.658);
+      -webkit-text-stroke-color: black;
+      text-shadow: 0.3px 0.3px 0 #000, 0.3px 0.3px 0 #000, 0.3px 0.3px 0 #000, 0.3px 0.3px 0 #000, 0.3px 0.3px 0 #000;
+    }
+
     .scoreCard {
       color: white;
       position: absolute;
@@ -208,7 +231,7 @@
       </div>
     </div>
     <!-- settings -->
-    <div id="settingsScreen" class="hidden">
+    <div id="settingsScreen" class="hidden settingsScreen">
       <select id="difficulty">
         <option value="0" selected>Easy</option>
         <option value="1">Medium</option>
