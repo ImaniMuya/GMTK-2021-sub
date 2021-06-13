@@ -32,18 +32,20 @@ class HUD {
     ctx.fillRect(0, 1 - camera.y, 1000, 120);
     ctx.fillStyle = "white";
 
-    // Draw Hearts
-    var heartCounter;
-    for (heartCounter = 0; heartCounter < subLives; heartCounter++) {
-      ctx.drawImage(heartDraw, 10 + (heartCounter * (this.heartW/2)) , 0 - camera.y, this.heartW, this.heartH);
-    }
-
     // Style Coin Text
     if (subTimeRemaining.toFixed(0) <= 60) ctx.fillStyle = "yellow";
-
+    
     // Draw Coins
-    ctx.drawImage(coinDraw, 10, 50 - camera.y, this.coinW, this.coinH);
-    ctx.fillText(points, 10 + (this.coinW * .90), 10 + (this.coinH * .96) - camera.y);
+    ctx.drawImage(coinDraw, 10, 0 - camera.y, this.coinW, this.coinH);
+    ctx.fillText(points, 10 + (this.coinW * .90), 0 + (this.coinH * .45) - camera.y);
+
+    // Draw Hearts
+    if (difficulty.options[difficulty.selectedIndex].value > 0){
+      var heartCounter;
+      for (heartCounter = 0; heartCounter < subLives; heartCounter++) {
+        ctx.drawImage(heartDraw, 10 + (heartCounter * (this.heartW/2)) , 50 - camera.y, this.heartW, this.heartH);
+      }
+    }
 
     // Style Timer Text
     if (subTimeRemaining.toFixed(0) <= 60) ctx.fillStyle = "green";
