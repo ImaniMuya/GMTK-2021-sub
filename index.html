@@ -307,8 +307,12 @@
     <img src="./assets/subL02.PNG" id="subL2" onload="imageLoaded()" hidden />
     <img src="./assets/subR01.png" id="subR1" onload="imageLoaded()" hidden />
     <img src="./assets/subR02.png" id="subR2" onload="imageLoaded()" hidden />
+    <img src="./assets/IMG_0486.PNG" id="bubble" onload="imageLoaded()" hidden />
+    <img src="./assets/IMG_0491.PNG" id="heart" onload="imageLoaded()" hidden />
+    <img src="./assets/IMG_0492.PNG" id="timer" onload="imageLoaded()" hidden />
+    <img src="./assets/IMG_0490.PNG" id="coin" onload="imageLoaded()" hidden />
 
-    <audio id="menuTune" preload="auto" src="./assets/menu v3.mp3" type="audio/mpeg" loop="true">
+    <audio id="menuTune" preload="auto" src="./assets/menu v4.mp3" type="audio/mpeg" loop="true">
       Your browser does not support the audio element
     </audio>
     <audio id="subTune" preload="auto" src="./assets/in-sub v2.mp3" type="audio/mpeg"></audio>
@@ -517,7 +521,7 @@
     }
   }
   function initMap() {
-    if (loadedImgs == 8) {
+    if (loadedImgs == 12) {
       const mlctx = mapLoader.getContext("2d");
       maps_data = [];
       c_maps.forEach((c_map) => {
@@ -527,6 +531,7 @@
         clearInterval(mapInitInterval);
       });
       playBtn.disabled = false;
+      console.log("finally loaded!")
     }
   }
   let mapInitInterval = setInterval(initMap, 500);
