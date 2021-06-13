@@ -149,6 +149,7 @@
 <script src="collisionMap.js"></script>
 <script src="levels.js"></script>
 <script src="treasure.js"></script>
+<script src="fish.js"></script>
 <script src="diver.js"></script>
 <script src="submarine.js"></script>
 <script>
@@ -193,6 +194,7 @@
   let hud = new HUD();
   let particles = new Particles();
   let chests = getChests(1);
+  let fishes = getFishes(1);
 
   function goToSettings() {
     menu.classList.add("hidden");
@@ -249,6 +251,7 @@
     camera.x = 0;
     camera.y = 0;
     chests = getChests(lvl);
+    fishes = getFishes(lvl);
     playAudio("subTune", true);
     paused = false;
     tick();
@@ -364,9 +367,16 @@
   }
 
   function increasePoints(amt) {
-    if (diver.isOutOfSub) {
       points += amt;
+      playAudio("treasureTune", true)
+  }
+
+  function increaseSpeed(amt, entity){
+    if (entity == "sub") {
+      submarine.speed += amt/2;
     }
+    else{diver.speed += amt/2;}
+    playAudio("treasureTune", true)
   }
 
   function draw() {
@@ -383,6 +393,7 @@
     diver.draw(ctx);
     particles.draw(ctx);
     chests.forEach((chest, idx) => chest.draw(ctx));
+    fishes.forEach((fish, idx) => fish.draw(ctx));
     hud.draw(ctx);
 
     ctx.restore();
@@ -407,19 +418,20 @@
     chests.forEach((chest, idx) => {
       chest.update();
       if (diver.isOutOfSub && circlesCollide(diver.cx, diver.cy, diver.h / 2, chest.x, chest.y, chest.r)) {
+        particles.explode(chest.x, chest.y, "green");
         increasePoints(chest.loot);
         chests.splice(idx, 1);
       }
     });
 
-    //placeholder for colliding and reducing health
-    if (keys["g"]) {
-      reduceHealth();
-    }
-    //placeholder for collecting treasure
-    if (keys["c"]) {
-      increasePoints();
-    }
+    fishes.forEach((fish, idx) => {
+      fish.update();
+      if (diver.isOutOfSub && circlesCollide(diver.cx, diver.cy, diver.h / 2, fish.x, fish.y, fish.r)) {
+        increaseSpeed(fish.increase, fish.entity);
+        fishes.splice(idx, 1);
+      }
+    });
+
     // end game
     if (keys["Escape"]) {
       done = true;
