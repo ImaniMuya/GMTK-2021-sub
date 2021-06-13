@@ -98,6 +98,7 @@
       <h2>Your Score!</h2>
       <div>Loot from your dive: <span id="treasureCount"></span> Coins</div>
       <div>Dive time: <span id="diveTime"></span> Seconds</div>
+      <div>Current High Score: <span id="highScore"></span> Seconds</div>
       <div>
         <button id="continueBtn" onclick="goToMenu()">Continue</button>
       </div>
@@ -181,6 +182,7 @@
     "255,255,255,255": 0,
     "0,0,0,255": 1,
   };
+  let chosenLvl;
   let done = false;
   let win = false;
 
@@ -213,8 +215,15 @@
     canvas.classList.add("hidden");
     playAudio("menuTune", true);
     // tally
+    let time = 60 - Math.floor(subTimeRemaining);
     treasureCount.innerText = points;
-    diveTime.innerText = 60 - Math.floor(subTimeRemaining);
+    diveTime.innerText = time;
+    // Set high score
+    if (localStorage.getItem(chosenLvl + "-time") > time) {
+      localStorage.setItem(chosenLvl + "-time", time);
+      console.log("new high score!");
+    }
+    highScore.innerText = localStorage.getItem(chosenLvl + "-time");
   }
 
   function startGame(lvl) {
