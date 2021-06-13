@@ -213,6 +213,7 @@
 <script src="diver.js"></script>
 <script src="submarine.js"></script>
 <script>
+  // Settin it all up
   document.getElementById("deathTune").loop = false;
   const canvas = document.getElementById("canvas");
   const renderer = document.getElementById("renderer");
@@ -220,7 +221,6 @@
   const ctx = renderer.getContext("2d");
   const c_maps = [c_map1, c_map2, c_map3];
   const bckgrnds = [c_map1, c_map2, c_map3];
-
   const SIZE = 1000;
   const MAP_H = 2500;
   const keys = {};
@@ -257,6 +257,38 @@
   let chests = getChests(1);
   let fishes = getFishes(1);
 
+  // Buttons
+  var resumeInput = document.getElementById("resume");
+  var controlIconBtnInput = document.getElementById("controlIconBtn");
+  var goDownButtonInput = document.getElementById("goDownButton");
+  var goUpButtonInput = document.getElementById("goUpButton");
+
+  resumeInput.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+    event.preventDefault();
+    document.getElementById("resume").click();
+    }
+  });
+  controlIconBtnInput.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+    event.preventDefault();
+    document.getElementById("controlIconBtn").click();
+    }
+  });
+  goDownButtonInput.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+    event.preventDefault();
+    document.getElementById("goDownButton").click();
+    }
+  });
+  goUpButtonInput.addEventListener("keyup", function(event) {
+  if (event.keyCode === 13) {
+    event.preventDefault();
+    document.getElementById("goUpButton").click();
+    }
+  });
+
+  // Navigation
   function goToSettings() {
     menu.classList.add("hidden");
     settingsScreen.classList.remove("hidden");
@@ -318,12 +350,14 @@
     playAudio("subTune", false);
     paused = false;
   }
+
   function showControlOverlay() {
     controlOverlay.classList.remove("hidden");
     pauseAudio("subTune");
     paused = true;
   }
 
+  // Let the games begin
   function startGame(lvl) {
     map_data = maps_data[lvl - 1];
     bckgrndImg = bckgrnds[lvl - 1];
