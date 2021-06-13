@@ -19,6 +19,7 @@
       margin: 0;
       padding: 0;
       background-color: darkgray;
+      color: white;
       min-height: 100vh;
       font-family: Arial, Helvetica, sans-serif;
     }
@@ -122,8 +123,9 @@
     <!-- score card -->
     <div id="score" class="hidden scoreCard">
       <h2>Your Score!</h2>
-      <div>Loot from your dive: <span id="treasureCount"></span> Coins</div>
-      <div>Dive time: <span id="diveTime"></span> Seconds</div>
+      <div>Loot from your dive: <span id="treasureCount"></span> coins</div>
+      <div>Dive time: <span id="diveTime"></span> seconds</div>
+      <div>Current High Score: <span id="highScore"></span></div>
       <div>
         <button id="continueBtn" onclick="goToMenu()">Continue</button>
       </div>
@@ -229,6 +231,7 @@
     "255,255,255,255": 0,
     "0,0,0,255": 1,
   };
+  let chosenLvl;
   let done = false;
   let win = false;
 
@@ -282,8 +285,20 @@
     controlIcon.classList.add("hidden");
     playAudio("menuTune", true);
     // tally
+    let time = 60 - Math.floor(subTimeRemaining);
     treasureCount.innerText = points;
-    diveTime.innerText = 60 - Math.floor(subTimeRemaining);
+    diveTime.innerText = time;
+    // Set high score if new time is lower and points is higher
+    if (!localStorage.getItem(chosenLvl + "-time") || localStorage.getItem(chosenLvl + "-points")) {
+      localStorage.setItem(chosenLvl + "-time", time);
+      localStorage.setItem(chosenLvl + "-points", points);
+    }
+    if (localStorage.getItem(chosenLvl + "-time") > time && localStorage.getItem(chosenLvl + "-points") < points) {
+      localStorage.setItem(chosenLvl + "-time", time);
+      localStorage.setItem(chosenLvl + "-points", points);
+      console.log("new high score!");
+    }
+    highScore.innerText = localStorage.getItem(chosenLvl + "-points") + " coins in " + localStorage.getItem(chosenLvl + "-time") + " seconds";
   }
 
   function hideControlOverlay() {
@@ -438,16 +453,17 @@
   }
 
   function increasePoints(amt) {
-      points += amt;
-      playAudio("treasureTune", true)
+    points += amt;
+    playAudio("treasureTune", true);
   }
 
-  function increaseSpeed(amt, entity){
+  function increaseSpeed(amt, entity) {
     if (entity == "sub") {
-      submarine.speed += amt/2;
+      submarine.speed += amt / 2;
+    } else {
+      diver.speed += amt / 2;
     }
-    else{diver.speed += amt/2;}
-    playAudio("treasureTune", true)
+    playAudio("treasureTune", true);
   }
 
   function draw() {
@@ -515,7 +531,7 @@
     }
 
     // win
-    if (submarine.y <= 0 && subTimeRemaining > 0) {
+    if (submarine.y <= 5 && subTimeRemaining > 0) {
       win = true;
       done = true;
       showScore();
