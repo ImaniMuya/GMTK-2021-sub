@@ -135,6 +135,7 @@
       <button id="level3" value="3" onclick="startGame(3)">Level3</button>
       <button id="controlBtn" onclick="goToControls()">Controls</button>
       <button id="settingsBtn" onclick="goToSettings()">Settings</button>
+      <button id="creditsBtn" onclick="goToCredits()">Credits</button>
     </div>
     <!-- score card -->
     <div id="score" class="hidden scoreCard">
@@ -185,6 +186,24 @@
       <h2>Controls</h2>
       <p>placeholder for control screen</p>
       <button id="resume" onclick="hideControlOverlay()">Resume</button>
+    </div>
+    <!-- credits page -->
+    <div class="hidden" id="credits">
+      <h2>Credits</h2>
+      <p>Fearless Coders</p>
+      <ul>
+        <li>Imani Muya</li>
+        <li>Jessica Hofmeister</li>
+      </ul>
+      <p>Art and Style Virtuoso</p>
+      <ul>
+        <li>Mary Newenheisen</li>
+      </ul>
+      <p>Music Magician</p>
+      <ul>
+        <li>Brendan Wallace</li>
+      </ul>
+      <button id="menuBtn" onclick="goToMenu()">Back</button>
     </div>
     <!-- canvas -->
     <canvas id="canvas" class="hidden" width="1000" height="1000">Your browser doesn't support html5 canvas!</canvas>
@@ -310,6 +329,7 @@
     controlPage.classList.add("hidden");
     controlOverlay.classList.add("hidden");
     controlIcon.classList.add("hidden");
+    credits.classList.add("hidden");
     playAudio("menuTune", true);
   }
   function goToControls() {
@@ -322,6 +342,10 @@
     controlPage.classList.remove("hidden");
     controlOverlay.classList.add("hidden");
     controlIcon.classList.add("hidden");
+  }
+  function goToCredits() {
+    menu.classList.add("hidden");
+    credits.classList.remove("hidden");
   }
   function showScore() {
     score.classList.remove("hidden");
