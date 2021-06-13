@@ -154,8 +154,8 @@ class Submarine {
     } else {
       image = this.subR[frame];
     }
-    ctx.fillStyle = "green";
-    ctx.fillRect(this.x, this.y, this.w, this.h);
+    // ctx.fillStyle = "green";
+    // ctx.fillRect(this.x, this.y, this.w, this.h);
     ctx.drawImage(image, this.cx - this.dw / 2, this.cy - this.dh / 2, this.dw, this.dh);
   }
 }
